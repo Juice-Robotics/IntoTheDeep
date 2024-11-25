@@ -19,6 +19,7 @@ public class Claw {
     ContinuousServo servo1;
     ContinuousServo servo2;
     BrushlandColorSensor colorSensor;
+    float power = 0;
 
     ElapsedTime sensorTimeout;
 
@@ -33,6 +34,7 @@ public class Claw {
     public void setPower(float p) {
         servo1.servo.setPower(p);
         servo2.servo.setPower(p);
+        power = p;
     }
 
     public void startIntake() {
@@ -84,6 +86,64 @@ public class Claw {
                 new SleepAction(0.05),
                 new InstantAction(() -> setPower(0))
         );
+    }
+
+    /**
+     * Toggles a stall state on the claw in order to <b>temporarily</b> increase claw grip.
+     * Typically used for clipped deposit.<br/>
+     * <h3>WARNING: Don't have the servo in a stalled state for too long in order to extend servo lifetime</h3>
+     */
+    public void stall() {
+        if (power == -0.1) {
+            setPower((float) -0.1);
+        } else {
+            setPower(0);
+        }
+    }
+
+    /**
+     * Toggles a stall state on the claw in order to <b>temporarily</b> increase claw grip.
+     * Typically used for clipped deposit.<br/>
+     * <h3>WARNING: Don't have the servo in a stalled state for too long in order to extend servo lifetime</h3>
+     * @param action input a <code>true</code> in order to activate action return method
+     * @return returns <code>InstantAction</code> that toggles the stall
+     */
+    public Action stall(boolean action) {
+        if (power == -0.1) {
+            return new InstantAction( () -> setPower((float) -0.1));
+        } else {
+            return new InstantAction( () -> setPower(0));
+        }
+    }
+
+    /**
+     * Toggles a stall state on the claw in order to <b>temporarily</b> increase claw grip.
+     * Typically used for clipped deposit.<br/>
+     * <h3>WARNING: Don't have the servo in a stalled state for too long in order to extend servo lifetime</h3.
+     * @param state <code>true</code> is a stalled claw and <code>false</code> is a unstalled claw
+     */
+    public void setStall(boolean state) {
+        if (state) {
+            setPower((float) -0.1);
+        } else {
+            setPower(0);
+        }
+    }
+
+    /**
+     * Toggles a stall state on the claw in order to <b>temporarily</b> increase claw grip.
+     * Typically used for clipped deposit.<br/>
+     * <h3>WARNING: Don't have the servo in a stalled state for too long in order to extend servo lifetime</h3>
+     * @param action input a <code>true</code> in order to activate action return method
+     * @param state <code>true</code> is a stalled claw and <code>false</code> is a unstalled claw
+     * @return returns <code>InstantAction</code> that toggles the stall
+     */
+    public Action setStall(boolean state, boolean action) {
+        if (state) {
+            return new InstantAction( () -> setPower((float) -0.1));
+        } else {
+            return new InstantAction( () -> setPower(0));
+        }
     }
 
     public SampleColors detectSample() {

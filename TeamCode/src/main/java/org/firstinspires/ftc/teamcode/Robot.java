@@ -384,28 +384,31 @@ public class Robot {
     }
 
     public void outtakeSpecimen() {
+        claw.stall();
         lift.runToPosition(lift.getPos() - 10);
         new Thread(() -> {
             sleep(50);
-            claw.eject();
+            claw.stall();
         }).start();
     }
 
     public Action outtakeSpecimen(boolean action) {
         return new SequentialAction(
+                claw.stall(true),
                 new InstantAction(() -> lift.runToPosition(lift.getPos() - 10)),
                 new SleepAction(0.15),
-                claw.eject(true)
+                claw.stall(true)
         );
     }
 
     public void outtakeSpecimenPreload() {
+        claw.stall();
         lift.runToPosition(lift.getPos() - 10);
         new Thread(() -> {
             sleep(50);
-            claw.eject();
             lift.runToPosition(0);
-
+            claw.stall()
+;
         }).start();
     }
 
