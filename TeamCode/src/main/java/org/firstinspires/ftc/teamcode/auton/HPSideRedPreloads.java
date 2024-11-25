@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.commands.LoopAction;
 import org.firstinspires.ftc.teamcode.roadrunner.KalmanDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 import org.firstinspires.ftc.teamcode.util.misc.FullPose2d;
@@ -29,6 +30,7 @@ public class HPSideRedPreloads extends LinearOpMode {
     Robot robot;
     public void runOpMode() {
         Pose2d beginPose = new Pose2d(12, -60, Math.toRadians(90));
+        PoseKeeper.set(beginPose);
         robot = new Robot(hardwareMap, true);
 
         Action preloadDrive = robot.drive.actionBuilder(robot.drive.pose)
@@ -200,8 +202,11 @@ public class HPSideRedPreloads extends LinearOpMode {
                             )
                         )
                 ),
-                new LoopAction(robot.lift::update)
+                new LoopAction(() -> {
+                    robot.lift.update();
+                    PoseKeeper.set(robot.drive.pose);
+                })
                 )
-                );
+        );
     }
 }

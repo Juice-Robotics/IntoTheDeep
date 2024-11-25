@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.roadrunner.KalmanDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.subsystems.vision.CVMaster;
 
 @Autonomous(name = "HPSideRed", group = "Autonomous")
@@ -70,5 +71,6 @@ public class HPSideRedStatic extends LinearOpMode {
                 new SequentialAction(
                         auton
                 ));
+        PoseKeeper.set(drive.pose);
     }
 }

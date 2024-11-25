@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.util.enums.AllianceColor;
 import org.firstinspires.ftc.teamcode.util.enums.Levels;
 
@@ -108,6 +109,7 @@ public class TeleOpMainRed extends LinearOpMode {
             robot.setDrivePower(-x, y, rx);
 
             robot.lift.update();
+            PoseKeeper.set(robot.drive.pose);
 
             oldGamepad.copy(gamepad1);
 

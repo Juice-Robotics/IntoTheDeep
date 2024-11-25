@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.commands.CommandMaster;
 import org.firstinspires.ftc.teamcode.roadrunner.KalmanDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.subsystems.claw.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.climb.ClimbWinch;
 import org.firstinspires.ftc.teamcode.subsystems.extension.Extension;
@@ -76,7 +77,7 @@ public class Robot {
 
         Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-        this.drive = new KalmanDrive(map, new Pose2d(0,0,0), limelight);
+        this.drive = new KalmanDrive(map, PoseKeeper.get(), limelight);
 
 //        this.cv = new CVMaster(map);
         this.components = new Component[]{
