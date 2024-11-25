@@ -205,7 +205,7 @@ public class HPSideRedPreloads extends LinearOpMode {
                 new LoopAction(() -> {
                     robot.lift.update();
                     PoseKeeper.set(robot.drive.pose);
-                })
+                }, this::isStopRequested)
                 )
         );
     }
