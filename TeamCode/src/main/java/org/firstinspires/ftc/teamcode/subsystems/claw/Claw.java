@@ -74,10 +74,10 @@ public class Claw {
         setPower((float) -0.5);
         try {
             Thread.sleep(50);
+            setPower(0);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        setPower(0);
     }
 
     public Action eject(boolean action) {

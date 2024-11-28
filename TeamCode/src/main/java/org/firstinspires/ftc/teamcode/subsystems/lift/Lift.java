@@ -78,19 +78,27 @@ public class Lift {
         timer.reset();
     }
 
-    public void runToPreset(Levels preset) {
-        if (preset == Levels.ZERO) {
-            runToPosition(0);
-        } else if (preset == Levels.INTAKE) {
-            runToPosition(0);
-        } else if (preset == Levels.LOW_BASKET){
-            runToPosition(0);
-        } else if (preset == Levels.HIGH_BASKET){
-            runToPosition(0);
-        } else if (preset == Levels.LOW_RUNG){
-            runToPosition(0);
-        } else if (preset == Levels.HIGH_RUNG){
-            runToPosition(0);
+    public void runToPreset(Levels level) {
+        if (level == Levels.INIT) {
+            runToPosition(100);
+        } else if (level == Levels.INTAKE) {
+            runToPosition(100);
+        } else if (level == Levels.INTERMEDIATE) {
+            runToPosition(100);
+        } else if (level == Levels.LOCATING_TARGETS) {
+            runToPosition(100);
+        } else if (level == Levels.LOW_BASKET) {
+            runToPosition(100);
+        } else if (level == Levels.HIGH_BASKET) {
+            runToPosition(100);
+        } else if (level == Levels.LOW_RUNG) {
+            runToPosition(100);
+        } else if (level == Levels.HIGH_RUNG) {
+            runToPosition(100);
+        } else if (level == Levels.CLIMB_EXTENDED) {
+            runToPosition(100);
+        } else if (level == Levels.CLIMB_RETRACTED) {
+            runToPosition(100);
         }
     }
 

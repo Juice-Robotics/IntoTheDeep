@@ -2,22 +2,16 @@ package org.firstinspires.ftc.teamcode;
 
 // IMPORT SUBSYSTEMS
 
-import static org.firstinspires.ftc.teamcode.Robot.normalizeRadians;
-
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.NullAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-
-import com.acmerobotics.roadrunner.Pose2d;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -30,7 +24,6 @@ import org.firstinspires.ftc.teamcode.subsystems.extension.Extension;
 import org.firstinspires.ftc.teamcode.subsystems.lift.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.arm.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.vision.CVMaster;
-import org.firstinspires.ftc.teamcode.teleop.tuning.TeleAutoDrivingTest;
 import org.firstinspires.ftc.teamcode.util.enums.AllianceColor;
 import org.firstinspires.ftc.teamcode.util.hardware.BrushlandColorSensor;
 import org.firstinspires.ftc.teamcode.util.hardware.Component;
@@ -98,8 +91,8 @@ public class Robot {
                 new ContinuousServo(1, "intake1", map),                     //10
                 new ContinuousServo(2, "intake2", map),                     //11
 
-                new StepperServo(0, "climb1", map, "climb1Encoder"),//12
-                new StepperServo(0, "climb2", map, "climb2Encoder") //13
+                new ContinuousServo(0, "climb1", map, "climb1Encoder"),//12
+                new ContinuousServo(0, "climb2", map, "climb2Encoder") //13
         };
 
         VoltageSensor voltageSensor = map.voltageSensor.iterator().next();
@@ -112,7 +105,7 @@ public class Robot {
         this.extension = new Extension((StepperServo) components[6], (StepperServo) components[7]);
         this.arm = new Arm((StepperServo) components[8], (StepperServo) components[9]);
         this.claw = new Claw((ContinuousServo) components[10], (ContinuousServo) components[11], colorSensor);
-        this.climbWinch = new ClimbWinch((StepperServo) components[12], (StepperServo) components[13]);
+        this.climbWinch = new ClimbWinch((ContinuousServo) components[12], (ContinuousServo) components[13]);
 
         this.imu = hardwareMap.get(IMU.class, "imu");
 
@@ -327,24 +320,28 @@ public class Robot {
     // DEPOSIT PRESETS
      public void lowBasket() {
         arm.runToPreset(Levels.LOW_BASKET);
+        extension.runToPreset(Levels.LOW_BASKET);
         lift.runToPreset(Levels.LOW_BASKET);
         state = Levels.LOW_BASKET;
      }
 
     public void highBasket() {
         arm.runToPreset(Levels.HIGH_BASKET);
+        extension.runToPreset(Levels.HIGH_BASKET);
         lift.runToPreset(Levels.HIGH_BASKET);
         state = Levels.HIGH_BASKET;
     }
 
     public void lowRung() {
         arm.runToPreset(Levels.LOW_RUNG);
+        extension.runToPreset(Levels.LOW_RUNG);
         lift.runToPreset(Levels.LOW_RUNG);
         state = Levels.LOW_RUNG;
     }
 
     public void highRung() {
         arm.runToPreset(Levels.HIGH_RUNG);
+        extension.runToPreset(Levels.HIGH_RUNG);
         lift.runToPreset(Levels.HIGH_RUNG);
         state = Levels.HIGH_RUNG;
     }
@@ -360,9 +357,10 @@ public class Robot {
      * <h1>Drop preload to the goat <u><b>DITA RAJEEV</b></u></h1>
      */
     public void preloadDropPreset() {
-        arm.runToPreset(Levels.HIGH_RUNG);
-        lift.runToPreset(Levels.HIGH_RUNG);
-        state = Levels.LOW_BASKET;
+        arm.runToPreset(Levels.INTAKE);
+        extension.runToPosition(0);
+        lift.runToPreset(Levels.INTAKE);
+        state = Levels.INTERMEDIATE;
     }
 
 
@@ -448,21 +446,18 @@ public class Robot {
 
 
     public Action primeClimb() {
-        return new InstantAction(() -> {
-                    climbWinch.up();
-                    if (state == Levels.CLIMB_PRIMED) {
-                        lift.runToPreset(Levels.INTERMEDIATE);
-                        state = Levels.INTERMEDIATE;
-                    } else {
-                        lift.runToPreset(Levels.CLIMB_EXTENDED);
-                        state = Levels.CLIMB_PRIMED;
-                    }
-                });
+        return new SequentialAction(
+                climbWinch.up(),
+                new InstantAction(() -> {
+                    lift.runToPreset(Levels.CLIMB_EXTENDED);
+                    state = Levels.CLIMB_PRIMED;
+                })
+        );
     }
     public Action startClimbL2(Gamepad gamepad) {
         return new SequentialAction(
+                climbWinch.startClimb(),
                 new InstantAction(() -> {
-                    climbWinch.climb();
                     state = Levels.ASCENDING;
                 }),
                 commands.waitL2WinchClimbCompletion(gamepad)

@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.subsystems.climb.ClimbWinch;
 import org.firstinspires.ftc.teamcode.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 
@@ -30,4 +31,6 @@ public class CommandMaster {
     public Action waitForExtension(float target) {
         return new ExtensionPoll(robot, target);
     }
+
+    public Action winchRunToPosition(ClimbWinch cW, float target) {return new WinchStopAtPosition(cW, target);}
 }
