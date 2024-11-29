@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.subsystems.lift.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.arm.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.util.enums.AllianceColor;
+import org.firstinspires.ftc.teamcode.util.enums.ClimbType;
 import org.firstinspires.ftc.teamcode.util.hardware.BrushlandColorSensor;
 import org.firstinspires.ftc.teamcode.util.hardware.Component;
 import org.firstinspires.ftc.teamcode.util.hardware.ContinuousServo;
@@ -54,8 +55,9 @@ public class Robot {
     boolean intaking = false;
     public boolean l3ClimbOverride = false;
     public Levels state = Levels.INIT;
-    Gamepiece mode = Gamepiece.SAMPLE;
+    public Gamepiece mode = Gamepiece.SAMPLE;
     public SampleColors targetColor = SampleColors.YELLOW;
+    public ClimbType climbMode = ClimbType.LEVEL_3;
 
     Motor backLeft;
     Motor backRight;
@@ -227,6 +229,14 @@ public class Robot {
         }
     }
 
+    public void toggleClimbMode() {
+        if (climbMode == ClimbType.LEVEL_2) {
+            climbMode = ClimbType.LEVEL_3;
+        } else if (climbMode == ClimbType.LEVEL_3) {
+            climbMode = ClimbType.LEVEL_2;
+        }
+    }
+
     // INTAKE PRESETS
 
     public void intakePreset() {
@@ -274,6 +284,25 @@ public class Robot {
                     state = Levels.INTAKE;
                 })
         );
+    }
+
+    public Action teleIntakePreset(double extTicks, boolean action) {
+        return new InstantAction(() -> {
+            lift.runToPreset(Levels.INTAKE);
+            arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
+            //TODO: CONVERT FROM INCHES TO TICKS
+            extension.runToPosition((float) extTicks);
+            state = Levels.INTAKE_INTERMEDIATE;
+        });
+    }
+
+    public Action intakeDrop() {
+        return new InstantAction(() -> {
+            arm.runToPreset(Levels.INTAKE);
+            claw.startIntake();
+            intaking = true;
+            state = Levels.INTAKE;
+        });
     }
 
     public void autonObParkPreset() {
@@ -446,13 +475,20 @@ public class Robot {
 
 
     public Action primeClimb() {
-        return new SequentialAction(
-                climbWinch.up(),
-                new InstantAction(() -> {
-                    lift.runToPreset(Levels.CLIMB_EXTENDED);
-                    state = Levels.CLIMB_PRIMED;
-                })
-        );
+        if (climbMode == ClimbType.LEVEL_3) {
+            return new SequentialAction(
+                    climbWinch.up(),
+                    new InstantAction(() -> {
+                        lift.runToPreset(Levels.CLIMB_EXTENDED);
+                        state = Levels.CLIMB_PRIMED;
+                    })
+            );
+        } else {
+            return new SequentialAction(
+                    climbWinch.up(),
+                    new InstantAction(() -> state = Levels.CLIMB_PRIMED)
+            );
+        }
     }
     public Action startClimbL2(Gamepad gamepad) {
         return new SequentialAction(
@@ -461,6 +497,16 @@ public class Robot {
                     state = Levels.ASCENDING;
                 }),
                 commands.waitL2WinchClimbCompletion(gamepad)
+        );
+    }
+
+    public Action startClimbFullL2() {
+        return new SequentialAction(
+                climbWinch.startClimb(),
+                new InstantAction(() -> {
+                    state = Levels.ASCENDING;
+                }),
+                commands.waitFullL2WinchClimbCompletion()
         );
     }
 

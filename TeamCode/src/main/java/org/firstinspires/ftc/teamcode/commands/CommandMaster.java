@@ -28,6 +28,10 @@ public class CommandMaster {
         return new L2WinchClimbPoll(robot, gamepad);
     }
 
+    public Action waitFullL2WinchClimbCompletion() {
+        return new FullL2WinchClimbPoll(robot);
+    }
+
     public Action waitForExtension(float target) {
         return new ExtensionPoll(robot, target);
     }
