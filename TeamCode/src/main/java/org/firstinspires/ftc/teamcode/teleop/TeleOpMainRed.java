@@ -52,7 +52,9 @@ public class TeleOpMainRed extends LinearOpMode {
                             robot.intakePreset(195, true)
                     );
                 } else {
-                    robot.intakeDrop();
+                    actionsQueue.add(
+                            robot.intakeDrop()
+                    );
                 }
             }
             if (gamepad1.triangle && !oldGamepad.triangle) {
