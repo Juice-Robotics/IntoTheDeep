@@ -28,7 +28,7 @@ public class Extension {
         if (level == Levels.INIT) {
             runToPosition(100);
         } else if (level == Levels.INTAKE) {
-            runToPosition(100);
+            runToPosition(190);
         } else if (level == Levels.INTERMEDIATE) {
             runToPosition(100);
         } else if (level == Levels.LOCATING_TARGETS) {

@@ -273,11 +273,12 @@ public class Robot {
         return new SequentialAction(
                 new InstantAction(() -> {
                     lift.runToPreset(Levels.INTAKE);
-                    arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
                     //TODO: CONVERT FROM INCHES TO TICKS
                     extension.runToPosition((float) extTicks);
                 }),
 //                commands.waitForExtension((float) (extTicks - 20)),
+                new SleepAction(1),
+                new InstantAction(() -> arm.runToPreset(Levels.INTAKE_INTERMEDIATE)),
                 new SleepAction(1),
                 new InstantAction(() -> {
                     arm.runToPreset(Levels.INTAKE);
@@ -289,13 +290,18 @@ public class Robot {
     }
 
     public Action teleIntakePreset(double extTicks, boolean action) {
-        return new InstantAction(() -> {
+        return new SequentialAction(
+                new InstantAction(() -> {
             lift.runToPreset(Levels.INTAKE);
-            arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
             //TODO: CONVERT FROM INCHES TO TICKS
             extension.runToPosition((float) extTicks);
-            state = Levels.INTAKE_INTERMEDIATE;
-        });
+        }),
+                new SleepAction(1),
+                new InstantAction(() -> {
+                    arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
+                    state = Levels.INTAKE_INTERMEDIATE;
+                })
+                );
     }
 
     public Action intakeDrop() {
