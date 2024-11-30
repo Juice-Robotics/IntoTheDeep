@@ -16,11 +16,11 @@ import org.firstinspires.ftc.teamcode.util.hardware.StepperServo;
 @Config
 //@Disabled
 public class PresetTuner extends LinearOpMode {
-    public static double ARM_POS = 0;
+    public static double ARM_POS = 103;
     public static double CLAW_SPEED = 0;
     public static double CLIMB_SPEED = 0;
-    public static double ELBOW_POS = 0;
-    public static double EXT_POS = 270;
+    public static double ELBOW_POS = 282;
+    public static double EXT_POS = 180;
     public static int LIFT_POS = 0;
 
 
@@ -41,8 +41,8 @@ public class PresetTuner extends LinearOpMode {
         ext2 = new StepperServo(0, "ext2", hardwareMap);
         arm = new StepperServo(0, "arm", hardwareMap);
         elbow = new StepperServo(0, "elbow", hardwareMap);
-        intake1 = new ContinuousServo(0, "intakeServo1", hardwareMap);
-        intake2 = new ContinuousServo(0, "intakeServo2", hardwareMap);
+        intake1 = new ContinuousServo(0, "claw1", hardwareMap);
+        intake2 = new ContinuousServo(0, "claw2", hardwareMap);
         climb1 = new ContinuousServo(0, "climb1", hardwareMap);
         climb2 = new ContinuousServo(0, "climb2", hardwareMap);
         lift = new Lift(new Motor(0, "lift1", hardwareMap, false), new Motor(0, "lift2", hardwareMap, false), hardwareMap.voltageSensor.iterator().next());
@@ -62,18 +62,18 @@ public class PresetTuner extends LinearOpMode {
             climb1.setSpeed((float) CLIMB_SPEED);
             climb2.setSpeed((float) CLIMB_SPEED);
 
-            if (prevLiftTarget != LIFT_POS) {
-                lift.runToPosition(LIFT_POS);
-            }
-            prevLiftTarget = LIFT_POS;
+//            if (prevLiftTarget != LIFT_POS) {
+//                lift.runToPosition(LIFT_POS);
+//            }
+//            prevLiftTarget = LIFT_POS;
         }
     }
 }
 
 
-// arm: 85
-// claw open (hold): 70
-// claw close (drop): 180
-// intake lock: 320; 176 intake down
-// elbow (capture): 280, wrist 272
-// arm intermediate: 100
+// INTAKE (DOWN)
+// Arm: 103, elbow: 282, ext 190
+// INTAKE (INTERMEDIATE)
+// Arm: 130, elbow 282, ext 190
+// INTERMEDIATE
+// Arm: 260, Elbow: 190, Ext: 100

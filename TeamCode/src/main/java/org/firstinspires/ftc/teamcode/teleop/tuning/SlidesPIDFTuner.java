@@ -32,13 +32,13 @@ public class SlidesPIDFTuner extends OpMode {
         controller1 = new PIDController(p, i , d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        slides1 = hardwareMap.get(DcMotorEx.class, "slides1");
-        slides2 = hardwareMap.get(DcMotorEx.class, "slides2");
-        slides1.setDirection(DcMotorSimple.Direction.REVERSE);
+        slides1 = hardwareMap.get(DcMotorEx.class, "lift1");
+        slides2 = hardwareMap.get(DcMotorEx.class, "lift2");
+        slides2.setDirection(DcMotorSimple.Direction.REVERSE);
         slides1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slides2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        slides2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slides1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slides2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        slides2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -48,6 +48,7 @@ public class SlidesPIDFTuner extends OpMode {
 
         double pid1 = controller1.calculate(slides1Pos, target);
         double ff = f;
+//        double ff = Math.cos(Math.toRadians((double) target / (700/180.0)))*f;
 
         double power1 = pid1 + ff;
 
