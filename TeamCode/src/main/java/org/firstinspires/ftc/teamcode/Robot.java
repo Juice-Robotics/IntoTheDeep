@@ -76,25 +76,25 @@ public class Robot {
 
 //        this.cv = new CVMaster(map);
         this.components = new Component[]{
-                new Motor(3, "leftBack", map, true),                //0 left odometer
-                new Motor(2, "rightBack", map, false),              //1 right odometer
-                new Motor(1, "leftFront", map, true),               //2 middle odometer
-                new Motor(0, "rightFront", map, false),             //3
+                new Motor(0, "leftRear", map, true),                //0 left odometer
+                new Motor(1, "rightRear", map, false),              //1 right odometer
+                new Motor(2, "leftFront", map, true),               //2 middle odometer
+                new Motor(3, "rightFront", map, false),             //3
 
                 new Motor(0, "lift1", map, false),                  //4
                 new Motor(1, "lift2", map, false),                  //5
 
-                new StepperServo(0, "ext1", map),    //6
-                new StepperServo(1, "ext2", map),    //7
+                new StepperServo(2, "ext1", map),    //6
+                new StepperServo(3, "ext2", map),    //7
 
-                new StepperServo(0, "arm", map),      //8
+                new StepperServo(4, "arm", map),      //8
 
-                new StepperServo(0, "elbow", map),  //9
+                new StepperServo(5, "elbow", map),  //9
                 new ContinuousServo(1, "intake1", map),                     //10
-                new ContinuousServo(2, "intake2", map),                     //11
+                new ContinuousServo(5, "intake2", map),                     //11
 
                 new ContinuousServo(0, "climb1", map, "climb1Encoder"),//12
-                new ContinuousServo(0, "climb2", map, "climb2Encoder") //13
+                new ContinuousServo(1, "climb2", map, "climb2Encoder") //13
         };
 
         VoltageSensor voltageSensor = map.voltageSensor.iterator().next();
