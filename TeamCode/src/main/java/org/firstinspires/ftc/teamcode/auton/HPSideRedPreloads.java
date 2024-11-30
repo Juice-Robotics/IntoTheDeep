@@ -208,5 +208,6 @@ public class HPSideRedPreloads extends LinearOpMode {
                 }, this::isStopRequested)
                 )
         );
+        robot.cv.kill();
     }
 }

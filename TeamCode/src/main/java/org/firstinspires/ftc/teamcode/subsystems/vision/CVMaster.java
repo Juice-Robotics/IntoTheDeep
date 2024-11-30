@@ -114,15 +114,15 @@ public class CVMaster {
 
     public void stop() {
         limelight.stop();
-        portal.close();
+//        portal.close();
     }
 
     public void kill() {
         limelight.stop();
         limelight.shutdown();
-        portal.stopLiveView();
-        portal.stopStreaming();
-        portal.close();
+//        portal.stopLiveView();
+//        portal.stopStreaming();
+//        portal.close();
     }
 
     public void setLLPipeline(LLPipeline p) {
