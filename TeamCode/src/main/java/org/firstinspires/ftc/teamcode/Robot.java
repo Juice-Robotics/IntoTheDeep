@@ -84,12 +84,12 @@ public class Robot {
                 new Motor(0, "lift1", map, false),                  //4
                 new Motor(1, "lift2", map, false),                  //5
 
-                new StepperServo(0, "ext1", map, "ext1Encoder"),    //6
-                new StepperServo(1, "ext2", map, "ext2Encoder"),    //7
+                new StepperServo(0, "ext1", map),    //6
+                new StepperServo(1, "ext2", map),    //7
 
-                new StepperServo(0, "arm", map, "armEncoder"),      //8
+                new StepperServo(0, "arm", map),      //8
 
-                new StepperServo(0, "elbow", map, "elbowEncoder"),  //9
+                new StepperServo(0, "elbow", map),  //9
                 new ContinuousServo(1, "intake1", map),                     //10
                 new ContinuousServo(2, "intake2", map),                     //11
 
@@ -112,7 +112,8 @@ public class Robot {
         this.imu = hardwareMap.get(IMU.class, "imu");
 
         this.commands = new CommandMaster(this);
-        this.cv = new CVMaster(limelight, hardwareMap.get(WebcamName.class, "Webcam 1"));
+//        this.cv = new CVMaster(limelight, hardwareMap.get(WebcamName.class, "Webcam 1"));
+        this.cv = new CVMaster(limelight,null);
         this.hardwareMap = map;
 
         backLeft = (Motor) components[0];
@@ -276,7 +277,8 @@ public class Robot {
                     //TODO: CONVERT FROM INCHES TO TICKS
                     extension.runToPosition((float) extTicks);
                 }),
-                commands.waitForExtension((float) (extTicks - 20)),
+//                commands.waitForExtension((float) (extTicks - 20)),
+                new SleepAction(1),
                 new InstantAction(() -> {
                     arm.runToPreset(Levels.INTAKE);
                     claw.startIntake();

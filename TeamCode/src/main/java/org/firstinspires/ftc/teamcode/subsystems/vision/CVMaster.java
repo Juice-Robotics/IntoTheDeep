@@ -96,15 +96,15 @@ public class CVMaster {
                 .setDilateSize(2)
                 .build();
 
-        portal = new VisionPortal.Builder()
-                .setCamera(camera)
-                .setCameraResolution(new Size(1280, 800))
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .addProcessors(redProcessor, yellowProcessor, blueProcessor)
-                .enableLiveView(true)
-                .setAutoStopLiveView(true)
-
-                .build();
+//        portal = new VisionPortal.Builder()
+//                .setCamera(camera)
+//                .setCameraResolution(new Size(1280, 800))
+//                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+//                .addProcessors(redProcessor, yellowProcessor, blueProcessor)
+//                .enableLiveView(true)
+//                .setAutoStopLiveView(true)
+//
+//                .build();
         setEOCVPipeline(EOCVPipeline.YELLOW_SAMPLE);
     }
 
