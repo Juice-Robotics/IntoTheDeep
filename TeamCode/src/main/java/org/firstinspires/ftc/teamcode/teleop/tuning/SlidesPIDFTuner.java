@@ -18,8 +18,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class SlidesPIDFTuner extends OpMode {
     private PIDController controller1;
 
-    public static double p = 0.01, i = 0, d = 0.0001;
-    public static double f = 0.006;
+    public static double p = 0.0, i = 0, d = 0.000;
+    public static double f = 0.000;
 
     public static int target = 0;
     private final double angleSlides = 60;
@@ -47,7 +47,7 @@ public class SlidesPIDFTuner extends OpMode {
         int slides1Pos = slides1.getCurrentPosition();
 
         double pid1 = controller1.calculate(slides1Pos, target);
-        double ff = Math.cos(Math.toRadians(angleSlides)) * f;
+        double ff = f;
 
         double power1 = pid1 + ff;
 

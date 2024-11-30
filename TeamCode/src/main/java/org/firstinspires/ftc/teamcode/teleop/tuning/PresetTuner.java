@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.subsystems.lift.Lift;
 import org.firstinspires.ftc.teamcode.util.hardware.ContinuousServo;
@@ -46,6 +47,7 @@ public class PresetTuner extends LinearOpMode {
         climb2 = new ContinuousServo(0, "climb2", hardwareMap);
         lift = new Lift(new Motor(0, "lift1", hardwareMap, false), new Motor(0, "lift2", hardwareMap, false), hardwareMap.voltageSensor.iterator().next());
 
+        intake2.servo.setDirection(DcMotorSimple.Direction.REVERSE);
         int prevLiftTarget = LIFT_POS;
         // Initialize your own robot class
         waitForStart();
