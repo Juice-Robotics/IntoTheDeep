@@ -34,26 +34,27 @@ public class SlidesPIDFTuner extends OpMode {
 
         slides1 = hardwareMap.get(DcMotorEx.class, "lift1");
         slides2 = hardwareMap.get(DcMotorEx.class, "lift2");
-        slides2.setDirection(DcMotorSimple.Direction.REVERSE);
+        slides1.setDirection(DcMotorSimple.Direction.REVERSE);
         slides1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        slides2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slides1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        slides2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slides1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        slides2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public void loop() {
         controller1.setPID(p, i, d);
         int slides1Pos = slides1.getCurrentPosition();
-
+        telemetry.addData("pos ", slides1Pos);
         double pid1 = controller1.calculate(slides1Pos, target);
         double ff = f;
 //        double ff = Math.cos(Math.toRadians((double) target / (700/180.0)))*f;
 
-        double power1 = pid1 + ff;
+        double power1 =  pid1 + ff;
+        telemetry.addData("pow ", power1);
 
-        slides1.setPower(power1);
-        slides2.setPower(power1);
+        slides1.setPower(-power1);
+        slides2.setPower(-power1);
 
         telemetry.addData("pos1 ", slides1Pos);
         telemetry.addData("target ", target);

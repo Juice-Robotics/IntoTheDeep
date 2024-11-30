@@ -62,10 +62,11 @@ public class PresetTuner extends LinearOpMode {
             climb1.setSpeed((float) CLIMB_SPEED);
             climb2.setSpeed((float) CLIMB_SPEED);
 
-//            if (prevLiftTarget != LIFT_POS) {
-//                lift.runToPosition(LIFT_POS);
-//            }
-//            prevLiftTarget = LIFT_POS;
+            if (prevLiftTarget != LIFT_POS) {
+                lift.runToPosition(LIFT_POS);
+            }
+            prevLiftTarget = LIFT_POS;
+            lift.update();
         }
     }
 }
@@ -77,3 +78,5 @@ public class PresetTuner extends LinearOpMode {
 // Arm: 130, elbow 282, ext 190
 // INTERMEDIATE
 // Arm: 260, Elbow: 190, Ext: 100
+
+// LIFT MAX 2150

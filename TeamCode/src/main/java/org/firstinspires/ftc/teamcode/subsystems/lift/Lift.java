@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.lift;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,8 +21,8 @@ public class Lift {
     double maxvel = 6000;
     double maxaccel = 6000;
 
-    public double p = 0.01, i = 0.00, d = 0.0001;
-    public double f = 0.006;
+    public double p = 0.02, i = 0.00, d = 0.00045;
+    public double f = 0.125;
     double voltageCompensation;
 
     public double target = 0;
@@ -43,6 +44,8 @@ public class Lift {
 
         controller1 = new PIDController(p, i , d);
         slides1.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        slides1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slides1.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         timer = new ElapsedTime();
         profile = MotionProfileGenerator.generateSimpleMotionProfile(1, 0, maxvel, maxaccel);
@@ -50,32 +53,33 @@ public class Lift {
 
 
     public void update() {
-        target = profile.get(timer.time());
+//        target = profile.get(timer.time());
 
         int motorPos = slides1.motor.getCurrentPosition();
 
         double pid1 = controller1.calculate(motorPos, target);
 //        double pid2 = controller2.calculate(slides2Pos, target);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+//        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+        double ff = f;
 
         voltageCompensation = 13.2 / voltageSensor.getVoltage();
         power1 = (pid1 + ff) * voltageCompensation;
 //        power2 = pid2 + ff;
 
         if (target == 0){
-            slides1.motor.setPower(power1);
-            slides2.motor.setPower(power1); //was at *0.3 pre push
+            slides1.motor.setPower(-power1);
+            slides2.motor.setPower(-power1); //was at *0.3 pre push
         }
         else {
-            slides1.motor.setPower(power1);
-            slides2.motor.setPower(power1);
+            slides1.motor.setPower(-power1);
+            slides2.motor.setPower(-power1);
         }
     }
 
     public void runToPosition(int ticks) {
-//        target = ticks;
-        profile = MotionProfileGenerator.generateSimpleMotionProfile(getPos(), ticks, maxvel, maxaccel);
-        timer.reset();
+        target = ticks;
+//        profile = MotionProfileGenerator.generateSimpleMotionProfile(getPos(), ticks, maxvel, maxaccel);
+//        timer.reset();
     }
 
     public void runToPreset(Levels level) {
