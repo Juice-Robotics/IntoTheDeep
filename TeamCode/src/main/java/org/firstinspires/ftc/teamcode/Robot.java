@@ -219,7 +219,7 @@ public class Robot {
     }
 
     public void toggleGamepieceColor(AllianceColor allianceColor) {
-        if (targetColor == SampleColors.BLUE || targetColor == SampleColors.RED) {
+        if ((targetColor == SampleColors.BLUE || targetColor == SampleColors.RED) && mode == Gamepiece.SAMPLE) {
             targetColor = SampleColors.YELLOW;
         } else {
             if (allianceColor == AllianceColor.RED) {
@@ -299,12 +299,15 @@ public class Robot {
     }
 
     public Action intakeDrop() {
-        return new InstantAction(() -> {
-            arm.runToPreset(Levels.INTAKE);
-            claw.startIntake();
-            intaking = true;
-            state = Levels.INTAKE;
-        });
+        return new SequentialAction(
+            new InstantAction(() -> {
+                arm.runToPreset(Levels.INTAKE);
+                claw.startIntake();
+                intaking = true;
+                state = Levels.INTAKE;
+            }),
+                commands.stopIntake(targetColor)
+        );
     }
 
     public void autonObParkPreset() {

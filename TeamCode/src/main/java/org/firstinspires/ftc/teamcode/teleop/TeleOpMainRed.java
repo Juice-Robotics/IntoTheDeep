@@ -49,7 +49,7 @@ public class TeleOpMainRed extends LinearOpMode {
             if (gamepad1.right_bumper && !oldGamepad.right_bumper) {
                 if (robot.state != Levels.INTAKE_INTERMEDIATE) {
                     actionsQueue.add(
-                            robot.intakePreset(195, true)
+                            robot.teleIntakePreset(195, true)
                     );
                 } else {
                     actionsQueue.add(
@@ -107,7 +107,7 @@ public class TeleOpMainRed extends LinearOpMode {
             robot.setDrivePower(-x, y, rx);
 
             robot.lift.update();
-            PoseKeeper.set(robot.drive.pose);
+//            PoseKeeper.set(robot.drive.pose);
 
             oldGamepad.copy(gamepad1);
 
