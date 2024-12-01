@@ -76,8 +76,8 @@ public class Robot {
 
 //        this.cv = new CVMaster(map);
         this.components = new Component[]{
-                new Motor(0, "leftRear", map, true),                //0 left odometer
-                new Motor(1, "rightRear", map, false),              //1 right odometer
+                new Motor(0, "leftBack", map, true),                //0 left odometer
+                new Motor(1, "rightBack", map, false),              //1 right odometer
                 new Motor(2, "leftFront", map, true),               //2 middle odometer
                 new Motor(3, "rightFront", map, false),             //3
 
