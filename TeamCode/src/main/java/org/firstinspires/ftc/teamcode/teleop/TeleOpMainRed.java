@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.util.enums.AllianceColor;
 import org.firstinspires.ftc.teamcode.util.enums.ClimbType;
 import org.firstinspires.ftc.teamcode.util.enums.Levels;
+import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +51,14 @@ public class TeleOpMainRed extends LinearOpMode {
             if (gamepad1.right_bumper && !oldGamepad.right_bumper) {
                 if (robot.state != Levels.INTAKE_INTERMEDIATE) {
                     actionsQueue.add(
-                            robot.teleIntakePreset(195, true)
+                            robot.teleIntakePreset(true)
                     );
                 } else {
                     actionsQueue.add(
-                            robot.intakeDrop()
+                            new SequentialAction(
+                            robot.intakeDrop(),
+                                    robot.commands.stopIntake(SampleColors.RED)
+                            )
                     );
                 }
             }
@@ -120,7 +125,8 @@ public class TeleOpMainRed extends LinearOpMode {
             telemetry.addData("COLOR", robot.targetColor.toString());
             telemetry.addData("CLIMB", robot.climbMode.toString());
             telemetry.addData("LOOPTIME: ", frequency);
-//            telemetry.addData("state: ", robot.state);
+            telemetry.addData("state: ", robot.state);
+
             telemetry.update();
         }
     }

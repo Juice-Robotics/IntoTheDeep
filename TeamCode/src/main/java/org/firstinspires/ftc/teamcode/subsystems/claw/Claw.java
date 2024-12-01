@@ -33,7 +33,7 @@ public class Claw {
 
     public void setPower(float p) {
         servo1.servo.setPower(p);
-        servo2.servo.setPower(p);
+        servo2.servo.setPower(-p);
         power = p;
     }
 
@@ -73,7 +73,7 @@ public class Claw {
     public void eject() {
         setPower((float) -0.5);
         try {
-            Thread.sleep(50);
+            Thread.sleep(500);
             setPower(0);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -83,7 +83,7 @@ public class Claw {
     public Action eject(boolean action) {
         return new SequentialAction(
                 new InstantAction(() -> setPower((float) -0.5)),
-                new SleepAction(0.05),
+                new SleepAction(0.1),
                 new InstantAction(() -> setPower(0))
         );
     }
@@ -109,8 +109,8 @@ public class Claw {
      * @return returns <code>InstantAction</code> that toggles the stall
      */
     public Action stall(boolean action) {
-        if (power == -0.1) {
-            return new InstantAction( () -> setPower((float) -0.1));
+        if (power == 0.2) {
+            return new InstantAction( () -> setPower((float) 0.2));
         } else {
             return new InstantAction( () -> setPower(0));
         }
@@ -124,7 +124,7 @@ public class Claw {
      */
     public void setStall(boolean state) {
         if (state) {
-            setPower((float) -0.1);
+            setPower((float) 0.2);
         } else {
             setPower(0);
         }
@@ -140,7 +140,7 @@ public class Claw {
      */
     public Action setStall(boolean state, boolean action) {
         if (state) {
-            return new InstantAction( () -> setPower((float) -0.1));
+            return new InstantAction( () -> setPower((float) 0.2));
         } else {
             return new InstantAction( () -> setPower(0));
         }

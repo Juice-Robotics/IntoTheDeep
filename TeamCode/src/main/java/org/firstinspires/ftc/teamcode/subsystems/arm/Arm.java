@@ -28,26 +28,26 @@ public class Arm {
             runToPosition(103);
             setWristAngle(282);
         } else if (level == Levels.INTAKE_INTERMEDIATE) {
-            runToPosition(130);
+            runToPosition(150);
             setWristAngle(282);
         } else if (level == Levels.INTERMEDIATE) {
-            runToPosition(260);
-            setWristAngle(190);
+            runToPosition(220);
+            setWristAngle(282);
         } else if (level == Levels.LOCATING_TARGETS) {
             runToPosition(100);
             setWristAngle(100);
         } else if (level == Levels.LOW_BASKET) {
-            runToPosition(100);
-            setWristAngle(100);
+            runToPosition(320);
+            setWristAngle(110);
         } else if (level == Levels.HIGH_BASKET) {
-            runToPosition(100);
-            setWristAngle(100);
+            runToPosition(310);
+            setWristAngle(110);
         } else if (level == Levels.LOW_RUNG) {
             runToPosition(100);
             setWristAngle(100);
         } else if (level == Levels.HIGH_RUNG) {
-            runToPosition(100);
-            setWristAngle(100);
+            runToPosition(320);
+            setWristAngle(150);
         } else if (level == Levels.CLIMB_EXTENDED) {
             runToPosition(100);
             setWristAngle(100);

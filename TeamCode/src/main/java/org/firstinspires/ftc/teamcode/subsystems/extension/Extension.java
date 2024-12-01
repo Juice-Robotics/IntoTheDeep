@@ -7,6 +7,7 @@ public class Extension {
     StepperServo servo1;
     StepperServo servo2;
     //120 - 195
+    float low = 90;
 
     float target = 0;
 
@@ -26,25 +27,25 @@ public class Extension {
 
     public void runToPreset(Levels level) {
         if (level == Levels.INIT) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.INTAKE) {
             runToPosition(190);
         } else if (level == Levels.INTERMEDIATE) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.LOCATING_TARGETS) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.LOW_BASKET) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.HIGH_BASKET) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.LOW_RUNG) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.HIGH_RUNG) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.CLIMB_EXTENDED) {
-            runToPosition(100);
+            runToPosition(low);
         } else if (level == Levels.CLIMB_RETRACTED) {
-            runToPosition(100);
+            runToPosition(low);
         }
     }
 

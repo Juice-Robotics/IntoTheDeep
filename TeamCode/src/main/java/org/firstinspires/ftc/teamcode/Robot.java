@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.NullAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -30,6 +31,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.BrushlandColorSensor;
 import org.firstinspires.ftc.teamcode.util.hardware.Component;
 import org.firstinspires.ftc.teamcode.util.hardware.ContinuousServo;
 import org.firstinspires.ftc.teamcode.util.enums.Levels;
+import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 import org.firstinspires.ftc.teamcode.util.hardware.Motor;
 import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 import org.firstinspires.ftc.teamcode.util.hardware.StepperServo;
@@ -70,14 +72,14 @@ public class Robot {
     public Robot(HardwareMap map, boolean auton){
         this.auton = auton;
 
-        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        //Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-        this.drive = new KalmanDrive(map, PoseKeeper.get(), limelight);
+        //this.drive = new KalmanDrive(map, PoseKeeper.get(), limelight);
 
 //        this.cv = new CVMaster(map);
         this.components = new Component[]{
-                new Motor(0, "leftBack", map, true),                //0 left odometer
-                new Motor(1, "rightBack", map, false),              //1 right odometer
+                new Motor(0, "leftBack", map, false),                //0 left odometer
+                new Motor(1, "rightBack", map, true),              //1 right odometer
                 new Motor(2, "leftFront", map, true),               //2 middle odometer
                 new Motor(3, "rightFront", map, false),             //3
 
@@ -90,15 +92,15 @@ public class Robot {
                 new StepperServo(4, "arm", map),      //8
 
                 new StepperServo(5, "elbow", map),  //9
-                new ContinuousServo(1, "intake1", map),                     //10
-                new ContinuousServo(5, "intake2", map),                     //11
+                new ContinuousServo(1, "claw1", map),                     //10
+                new ContinuousServo(5, "claw2", map),                     //11
 
                 new ContinuousServo(0, "climb1", map, "climb1Encoder"),//12
                 new ContinuousServo(1, "climb2", map, "climb2Encoder") //13
         };
 
         VoltageSensor voltageSensor = map.voltageSensor.iterator().next();
-//        RevColorSensorV3 colorSensor = map.get(RevColorSensorV3.class, "colorSensor");
+        //RevColorSensorV3 colorSensor = map.get(RevColorSensorV3.class, "colorSensor");
         BrushlandColorSensor colorSensor = new BrushlandColorSensor(0, "color", map);
 
         // INIT SUBSYSTEMS
@@ -109,11 +111,11 @@ public class Robot {
         this.claw = new Claw((ContinuousServo) components[10], (ContinuousServo) components[11], colorSensor);
         this.climbWinch = new ClimbWinch((ContinuousServo) components[12], (ContinuousServo) components[13]);
 
-        this.imu = hardwareMap.get(IMU.class, "imu");
+        //this.imu = hardwareMap.get(GoBildaPinpoint.class, "imu");
 
         this.commands = new CommandMaster(this);
 //        this.cv = new CVMaster(limelight, hardwareMap.get(WebcamName.class, "Webcam 1"));
-        this.cv = new CVMaster(limelight,null);
+        //this.cv = new CVMaster(limelight,null);
         this.hardwareMap = map;
 
         backLeft = (Motor) components[0];
@@ -122,6 +124,13 @@ public class Robot {
         frontRight = (Motor) components[3];
     }
 
+    public Action initSubsystems(){
+        return new InstantAction(()->{
+            arm.runToPreset(Levels.INIT);
+            lift.runToPreset(Levels.INIT);
+            extension.runToPreset(Levels.INIT);
+        });
+    }
     public Action generateTeleOpAutomatedIntake(Gamepad gamepad) {
         CVMaster.EOCVPipeline targetPipeline = CVMaster.EOCVPipeline.YELLOW_SAMPLE;
         switch (targetColor) {
@@ -289,30 +298,29 @@ public class Robot {
         );
     }
 
-    public Action teleIntakePreset(double extTicks, boolean action) {
+    public Action teleIntakePreset(boolean action) {
         return new SequentialAction(
-                new InstantAction(() -> {
-            lift.runToPreset(Levels.INTAKE);
-            //TODO: CONVERT FROM INCHES TO TICKS
-            extension.runToPosition((float) extTicks);
-        }),
-                new SleepAction(1),
-                new InstantAction(() -> {
-                    arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
-                    state = Levels.INTAKE_INTERMEDIATE;
-                })
-                );
+            new InstantAction(() -> {
+                lift.runToPreset(Levels.INTAKE);
+                extension.runToPreset(Levels.INTAKE);
+            }),
+            new SleepAction(1),
+            new InstantAction(() -> {
+                arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
+                state = Levels.INTAKE_INTERMEDIATE;
+            })
+        );
     }
 
     public Action intakeDrop() {
         return new SequentialAction(
             new InstantAction(() -> {
-                arm.runToPreset(Levels.INTAKE);
                 claw.startIntake();
+                arm.runToPreset(Levels.INTAKE);
                 intaking = true;
                 state = Levels.INTAKE;
-            }),
-                commands.stopIntake(targetColor)
+            })
+                //commands.stopIntake(targetColor)
         );
     }
 
@@ -340,6 +348,13 @@ public class Robot {
         intaking = false;
         claw.stopIntake();
         intermediatePreset();
+    }
+    public Action stopIntakeAction() {
+        return new InstantAction(()->{
+            intaking = false;
+            claw.stopIntake();
+            intermediatePreset();} );
+
     }
 
     public boolean autoStopIntakeUpdate(SampleColors... colors) {
@@ -371,6 +386,14 @@ public class Robot {
         lift.runToPreset(Levels.HIGH_BASKET);
         state = Levels.HIGH_BASKET;
     }
+    public Action highBasketAction() {
+        return new InstantAction(()-> {
+            arm.runToPreset(Levels.HIGH_BASKET);
+            extension.runToPreset(Levels.HIGH_BASKET);
+            lift.runToPreset(Levels.HIGH_BASKET);
+            state = Levels.HIGH_BASKET;
+        });
+    }
 
     public void lowRung() {
         arm.runToPreset(Levels.LOW_RUNG);
@@ -384,6 +407,14 @@ public class Robot {
         extension.runToPreset(Levels.HIGH_RUNG);
         lift.runToPreset(Levels.HIGH_RUNG);
         state = Levels.HIGH_RUNG;
+    }
+    public Action highRung(boolean action) {
+        return new InstantAction( () ->
+        {arm.runToPreset(Levels.HIGH_RUNG);
+        extension.runToPreset(Levels.HIGH_RUNG);
+        lift.runToPreset(Levels.HIGH_RUNG);
+        state = Levels.HIGH_RUNG;}
+        );
     }
 
     public void preloadHighRung() {
@@ -419,7 +450,11 @@ public class Robot {
     }
 
     public Action outtakeSample(boolean action) {
-        return claw.eject(true);
+
+        return new InstantAction(()->{
+            claw.eject();
+            intermediatePreset();
+        });
     }
 
     public void outtakeSpecimen() {
@@ -433,10 +468,9 @@ public class Robot {
 
     public Action outtakeSpecimen(boolean action) {
         return new SequentialAction(
-                claw.stall(true),
-                new InstantAction(() -> lift.runToPosition(lift.getPos() - 10)),
-                new SleepAction(0.15),
-                claw.stall(true)
+            claw.setStall(true,true),
+            new SleepAction(0.5),
+            claw.setStall(false,true)
         );
     }
 
