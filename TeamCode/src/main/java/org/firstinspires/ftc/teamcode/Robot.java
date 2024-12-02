@@ -111,7 +111,7 @@ public class Robot {
         this.claw = new Claw((ContinuousServo) components[10], (ContinuousServo) components[11], colorSensor);
         this.climbWinch = new ClimbWinch((ContinuousServo) components[12], (ContinuousServo) components[13]);
 
-        //this.imu = hardwareMap.get(GoBildaPinpoint.class, "imu");
+        //this.imu = hardwareMap.get(IMU.class, "imu");
 
         this.commands = new CommandMaster(this);
 //        this.cv = new CVMaster(limelight, hardwareMap.get(WebcamName.class, "Webcam 1"));
