@@ -307,6 +307,7 @@ public class Robot {
             new SleepAction(1),
             new InstantAction(() -> {
                 arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
+                lift.slides1.resetEncoder();
                 state = Levels.INTAKE_INTERMEDIATE;
             })
         );
@@ -451,10 +452,11 @@ public class Robot {
 
     public Action outtakeSample(boolean action) {
 
-        return new InstantAction(()->{
-            claw.eject();
-            intermediatePreset();
-        });
+        return new SequentialAction(
+                claw.eject(true),
+                new InstantAction(
+            this::intermediatePreset)
+        );
     }
 
     public void outtakeSpecimen() {

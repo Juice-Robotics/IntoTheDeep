@@ -22,31 +22,31 @@ public class Arm {
 
     public void runToPreset(Levels level) {
         if (level == Levels.INIT) {
-            runToPosition(260);
+            runToPosition(286);
             setWristAngle(190);
         } else if (level == Levels.INTAKE) {
-            runToPosition(103);
+            runToPosition(121);//103
             setWristAngle(282);
         } else if (level == Levels.INTAKE_INTERMEDIATE) {
-            runToPosition(150);
+            runToPosition(180);
             setWristAngle(282);
         } else if (level == Levels.INTERMEDIATE) {
-            runToPosition(220);
+            runToPosition(238);
             setWristAngle(282);
         } else if (level == Levels.LOCATING_TARGETS) {
-            runToPosition(100);
+            runToPosition(126);
             setWristAngle(100);
         } else if (level == Levels.LOW_BASKET) {
-            runToPosition(320);
+            runToPosition(336);
             setWristAngle(110);
         } else if (level == Levels.HIGH_BASKET) {
-            runToPosition(310);
+            runToPosition(326);
             setWristAngle(110);
         } else if (level == Levels.LOW_RUNG) {
-            runToPosition(100);
+            runToPosition(126);
             setWristAngle(100);
         } else if (level == Levels.HIGH_RUNG) {
-            runToPosition(320);
+            runToPosition(346);
             setWristAngle(150);
         } else if (level == Levels.CLIMB_EXTENDED) {
             runToPosition(100);

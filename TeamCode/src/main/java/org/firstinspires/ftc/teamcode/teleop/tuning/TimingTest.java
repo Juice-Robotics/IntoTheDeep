@@ -135,6 +135,8 @@ public class TimingTest extends LinearOpMode {
             telemetry.addData("MODE", robot.mode.toString());
             telemetry.addData("COLOR", robot.targetColor.toString());
             telemetry.addData("CLIMB", robot.climbMode.toString());
+            telemetry.addData("LIFT ", robot.lift.getPos());
+            telemetry.addData("LIFT Target", robot.lift.target);
             telemetry.addData("LOOPTIME: ", frequency);
             telemetry.addData("state: ", robot.state);
             telemetry.addData("rbumper " ,gamepad1.right_bumper);
