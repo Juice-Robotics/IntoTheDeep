@@ -304,7 +304,7 @@ public class Robot {
                 lift.runToPreset(Levels.INTAKE);
                 extension.runToPreset(Levels.INTAKE);
             }),
-            new SleepAction(1),
+            new SleepAction(0.5),
             new InstantAction(() -> {
                 arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
                 lift.slides1.resetEncoder();
@@ -321,7 +321,7 @@ public class Robot {
                 intaking = true;
                 state = Levels.INTAKE;
             })
-                //commands.stopIntake(targetColor)
+//                commands.stopIntake(SampleColors.RED, SampleColors.YELLOW)
         );
     }
 
@@ -354,7 +354,8 @@ public class Robot {
         return new InstantAction(()->{
             intaking = false;
             claw.stopIntake();
-            intermediatePreset();} );
+            intermediatePreset();
+        } );
 
     }
 
@@ -368,6 +369,7 @@ public class Robot {
                 return false;
             case -1:
                 claw.eject();
+                intakeDrop();
                 return true;
         }
         return true;

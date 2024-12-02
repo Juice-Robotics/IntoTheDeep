@@ -147,7 +147,7 @@ public class Claw {
     }
 
     public SampleColors detectSample() {
-//        if (sensorTimeout.time(TimeUnit.SECONDS) < 1) {
+//        if (sensorTimeout.time(TimeUnit.SECONDS) < 1f) {
 //            return null;
 //        }
 

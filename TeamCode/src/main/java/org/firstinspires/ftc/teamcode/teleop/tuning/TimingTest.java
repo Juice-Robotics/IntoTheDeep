@@ -101,7 +101,9 @@ public class TimingTest extends LinearOpMode {
                                     robot.arm.runToPreset(Levels.HIGH_BASKET);
                                 }),
                                 new SleepAction(0.5),
-                                robot.claw.eject(true)
+                                robot.claw.eject(true),
+                                new SleepAction(0.5),
+                                robot.stopIntakeAction()
                         )
                 );
             }
