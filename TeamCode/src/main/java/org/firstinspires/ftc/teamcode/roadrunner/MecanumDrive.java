@@ -76,8 +76,8 @@ public class MecanumDrive {
         public double trackWidthTicks = 10.574026021669907;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.1;
-        public double kV = 0.11;
+        public double kS = 1.2997719968574537;
+        public double kV = 0.08957100605444729;
         public double kA = 0.0395;
 
         // path profile parameters (in inches)
@@ -146,9 +146,9 @@ public class MecanumDrive {
 
             imu = lazyImu.get();
 
-            // TODO: reverse encoders if needed
-            leftBack.setDirection(DcMotor.Direction.FORWARD);
-            leftFront.setDirection(DcMotor.Direction.FORWARD);
+//            // TODO: reverse encoders if needed
+//            leftBack.setDirection(DcMotor.Direction.FORWARD);
+//            leftFront.setDirection(DcMotor.Direction.FORWARD);
         }
 
         @Override
@@ -237,7 +237,7 @@ public class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: reverse motor directions if needed
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
