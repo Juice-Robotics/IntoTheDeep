@@ -16,6 +16,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.teamcode.roadrunner.*;
+import org.firstinspires.ftc.teamcode.subsystems.extension.Extension;
+import org.firstinspires.ftc.teamcode.util.hardware.StepperServo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,7 @@ public final class TuningOpModes {
     public static final String GROUP = "quickstart";
     public static final boolean DISABLED = false;
     public static Limelight3A ll;
+    public static Extension ext;
 
     private TuningOpModes() {}
 
@@ -46,6 +49,8 @@ public final class TuningOpModes {
         if (DRIVE_CLASS.equals(KalmanDrive.class)) {
             dvf = hardwareMap -> {
                 ll = hardwareMap.get(Limelight3A.class, "limelight");
+//                ext = new Extension(new StepperServo(0,"ext1",hardwareMap), new StepperServo(0,"ext2", hardwareMap));
+//                ext.runToPosition(120);
                 KalmanDrive pd = new KalmanDrive(hardwareMap, new Pose2d(0, 0, 0),ll);
 
                 List<Encoder> leftEncs = new ArrayList<>(), rightEncs = new ArrayList<>();

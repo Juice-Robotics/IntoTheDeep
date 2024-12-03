@@ -58,9 +58,9 @@ public class KalmanTuner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        cv = new CVMaster(hardwareMap.get(Limelight3A.class, "limelight"), hardwareMap.get(WebcamName.class, "Webcam 1"));
+        cv = new CVMaster(hardwareMap.get(Limelight3A.class, "limelight"), null);
         odo = hardwareMap.get(GoBildaPinpointDriverRR.class,"pinpoint");
-        otos = hardwareMap.get(SparkFunOTOS.class, "otos");
+//        otos = hardwareMap.get(SparkFunOTOS.class, "otos");
         KalmanFilter kalman = new KalmanFilter(new Pose2d(startingX, startingY, startingHeading), odo, cv.limelight);
 
         cv.start();
@@ -73,20 +73,20 @@ public class KalmanTuner extends LinearOpMode {
         odo.setEncoderDirections(GoBildaPinpointDriverRR.EncoderDirection.REVERSED, GoBildaPinpointDriverRR.EncoderDirection.FORWARD);
         odo.setPosition(new Pose2D(DistanceUnit.INCH, startingX, startingY, AngleUnit.RADIANS, startingHeading));
 
-        otos.setLinearUnit(DistanceUnit.INCH);
-        otos.setAngularUnit(AngleUnit.RADIANS);
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(otosXOffset, otosYOffset, otosHeadingOffset);
-        otos.setOffset(offset);
-        otos.setLinearScalar(1.0);
-        otos.setAngularScalar(1.0);
-        otos.calibrateImu();
-        otos.resetTracking();
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(startingX, startingY, startingHeading);
-        otos.setPosition(currentPosition);
-        // Get the hardware and firmware version
-        SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();
-        SparkFunOTOS.Version fwVersion = new SparkFunOTOS.Version();
-        otos.getVersionInfo(hwVersion, fwVersion);
+//        otos.setLinearUnit(DistanceUnit.INCH);
+//        otos.setAngularUnit(AngleUnit.RADIANS);
+//        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(otosXOffset, otosYOffset, otosHeadingOffset);
+//        otos.setOffset(offset);
+//        otos.setLinearScalar(1.0);
+//        otos.setAngularScalar(1.0);
+//        otos.calibrateImu();
+//        otos.resetTracking();
+//        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(startingX, startingY, startingHeading);
+//        otos.setPosition(currentPosition);
+//        // Get the hardware and firmware version
+//        SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();
+//        SparkFunOTOS.Version fwVersion = new SparkFunOTOS.Version();
+//        otos.getVersionInfo(hwVersion, fwVersion);
 
         backLeft = new Motor(3, "leftBack", hardwareMap, true);
         backRight = new Motor(3, "rightBack", hardwareMap, false);
@@ -99,8 +99,8 @@ public class KalmanTuner extends LinearOpMode {
             odo.update();
             Pose2D pos = odo.getPosition();
             Pose2d ppPose = new Pose2d(pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.RADIANS));
-            SparkFunOTOS.Pose2D otosPos = otos.getPosition();
-            Pose2d otosPose = new Pose2d(otosPos.x, otosPos.y, otosPos.h);
+//            SparkFunOTOS.Pose2D otosPos = otos.getPosition();
+//            Pose2d otosPose = new Pose2d(otosPos.x, otosPos.y, otosPos.h);
             LLResult result = cv.mt2RelocalizeRAW(pos.getHeading(AngleUnit.RADIANS));
             Pose3D pose3d = null;
             Pose2d llPose = null;
@@ -148,8 +148,8 @@ public class KalmanTuner extends LinearOpMode {
             c.setStroke("#edd100");
             Drawing.drawRobot(c, ppPose);
 
-            c.setStroke("#d90209");
-            Drawing.drawRobot(c, otosPose);
+//            c.setStroke("#d90209");
+//            Drawing.drawRobot(c, otosPose);
 
             c.setStroke("#fc8c03");
             Drawing.drawRobot(c, fusedPose);
@@ -157,8 +157,8 @@ public class KalmanTuner extends LinearOpMode {
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
 //            telemetry.addData("pose", pose);
-            double otosError = Math.sqrt((Math.pow((ppPose.position.x - otosPose.position.x), 2) + Math.pow((ppPose.position.y - otosPose.position.y), 2)));
-            telemetry.addData("otosError", otosError);
+//            double otosError = Math.sqrt((Math.pow((ppPose.position.x - otosPose.position.x), 2) + Math.pow((ppPose.position.y - otosPose.position.y), 2)));
+//            telemetry.addData("otosError", otosError);
             telemetry.addData("px", pos.getX(DistanceUnit.INCH));
             telemetry.addData("py", pos.getY(DistanceUnit.INCH));
             telemetry.addData("pheading", pos.getHeading(AngleUnit.RADIANS));

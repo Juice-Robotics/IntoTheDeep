@@ -132,19 +132,19 @@ public class CVMaster {
 
     public void setEOCVPipeline(EOCVPipeline pipeline) {
         if (pipeline == EOCVPipeline.RED_SAMPLE) {
-            portal.setProcessorEnabled(redProcessor, true);
-            portal.setProcessorEnabled(blueProcessor, false);
-            portal.setProcessorEnabled(yellowProcessor, false);
+//            portal.setProcessorEnabled(redProcessor, true);
+//            portal.setProcessorEnabled(blueProcessor, false);
+//            portal.setProcessorEnabled(yellowProcessor, false);
 //            setDashboardStream(redProcessor);
         } else if (pipeline == EOCVPipeline.BLUE_SAMPLE) {
-            portal.setProcessorEnabled(redProcessor, false);
-            portal.setProcessorEnabled(blueProcessor, true);
-            portal.setProcessorEnabled(yellowProcessor, false);
+//            portal.setProcessorEnabled(redProcessor, false);
+//            portal.setProcessorEnabled(blueProcessor, true);
+//            portal.setProcessorEnabled(yellowProcessor, false);
 //            setDashboardStream(blueProcessor);
         } else if (pipeline == EOCVPipeline.YELLOW_SAMPLE) {
-            portal.setProcessorEnabled(redProcessor, false);
-            portal.setProcessorEnabled(blueProcessor, false);
-            portal.setProcessorEnabled(yellowProcessor, true);
+//            portal.setProcessorEnabled(redProcessor, false);
+//            portal.setProcessorEnabled(blueProcessor, false);
+//            portal.setProcessorEnabled(yellowProcessor, true);
 //            setDashboardStream(yellowProcessor);
         }
         activeCV = pipeline;
