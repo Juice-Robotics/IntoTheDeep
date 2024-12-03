@@ -6,6 +6,8 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.ftc.FlightRecorder;
 import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpointRR;
+
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -55,12 +57,12 @@ public class KalmanDrive extends MecanumDrive {
         increase when you move the robot forward. And the Y (strafe) pod should increase when
         you move the robot to the left.
          */
-        public GoBildaPinpoint.EncoderDirection xDirection = GoBildaPinpoint.EncoderDirection.REVERSED;
-        public GoBildaPinpoint.EncoderDirection yDirection = GoBildaPinpoint.EncoderDirection.FORWARD;
+        public GoBildaPinpointDriverRR.EncoderDirection xDirection = GoBildaPinpointDriverRR.EncoderDirection.REVERSED;
+        public GoBildaPinpointDriverRR.EncoderDirection yDirection = GoBildaPinpointDriverRR.EncoderDirection.FORWARD;
     }
 
     public static Params PARAMS = new Params();
-    public GoBildaPinpointRR pinpoint;
+    public GoBildaPinpointDriverRR pinpoint;
     public Limelight3A ll;
     public KalmanFilter kalman;
     private Pose2d lastPinpointPose = pose;
@@ -68,7 +70,7 @@ public class KalmanDrive extends MecanumDrive {
     public KalmanDrive(HardwareMap hardwareMap, Pose2d pose, Limelight3A limelight) {
         super(hardwareMap, pose);
 //        FlightRecorder.write("PINPOINT_PARAMS",PARAMS);
-        pinpoint = hardwareMap.get(GoBildaPinpointRR.class,"pinpoint");
+        pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class,"pinpoint");
         ll = limelight;
         kalman = new KalmanFilter(pose, pinpoint, ll);
 

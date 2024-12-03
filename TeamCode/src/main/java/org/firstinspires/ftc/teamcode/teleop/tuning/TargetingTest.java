@@ -6,7 +6,8 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
+//import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
@@ -28,7 +29,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.Motor;
 @Config
 public class TargetingTest extends LinearOpMode {
     CVMaster cv;
-    GoBildaPinpoint odo;
+    GoBildaPinpointDriverRR odo;
     double oldTime = 0;
     Motor backLeft;
     Motor backRight;
@@ -51,7 +52,7 @@ public class TargetingTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         cv = new CVMaster(hardwareMap.get(Limelight3A.class, "limelight"), hardwareMap.get(WebcamName.class, "Webcam 1"));
-        odo = hardwareMap.get(GoBildaPinpoint.class,"pinpoint");
+        odo = hardwareMap.get(GoBildaPinpointDriverRR.class,"pinpoint");
         KalmanFilter kalman = new KalmanFilter(new Pose2d(startingX, startingY, startingHeading), odo, cv.limelight);
 
         cv.start();
@@ -61,8 +62,8 @@ public class TargetingTest extends LinearOpMode {
 //        odo.resetPosAndIMU();
         odo.setOffsets(odoXOffset, odoYOffset);
         odo.recalibrateIMU();
-        odo.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        odo.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.REVERSED);
+        odo.setEncoderResolution(GoBildaPinpointDriverRR.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriverRR.EncoderDirection.FORWARD, GoBildaPinpointDriverRR.EncoderDirection.REVERSED);
         odo.setPosition(new Pose2D(DistanceUnit.INCH, startingX, startingY, AngleUnit.RADIANS, startingHeading));
 
         backLeft = new Motor(3, "leftBack", hardwareMap, true);

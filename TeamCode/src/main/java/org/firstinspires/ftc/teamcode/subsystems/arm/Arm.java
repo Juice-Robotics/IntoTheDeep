@@ -31,10 +31,10 @@ public class Arm {
             runToPosition(180);
             setWristAngle(282);
         } else if (level == Levels.INTERMEDIATE) {
-            runToPosition(238);
+            runToPosition(232);
             setWristAngle(282);
         } else if (level == Levels.LOCATING_TARGETS) {
-            runToPosition(126);
+            runToPosition(100);
             setWristAngle(100);
         } else if (level == Levels.LOW_BASKET) {
             runToPosition(336);
@@ -43,7 +43,7 @@ public class Arm {
             runToPosition(326);
             setWristAngle(110);
         } else if (level == Levels.LOW_RUNG) {
-            runToPosition(126);
+            runToPosition(100);
             setWristAngle(100);
         } else if (level == Levels.HIGH_RUNG) {
             runToPosition(346);

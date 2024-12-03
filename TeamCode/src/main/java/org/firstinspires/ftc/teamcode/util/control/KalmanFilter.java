@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util.control;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,7 +21,7 @@ public class KalmanFilter {
     double estimateYVariance = 2;
     Pose2d estimateState;
     Pose2d calculatedState;
-    GoBildaPinpoint pinpoint;
+    GoBildaPinpointDriverRR pinpoint;
     Limelight3A limelight;
     ElapsedTime timer;
     Vector2d translatedVel;
@@ -32,7 +33,7 @@ public class KalmanFilter {
     double DEG_MULT_VARIANCE = 1;
     double TAG_VARIANCE = 2;
 
-    public KalmanFilter(Pose2d startPose, GoBildaPinpoint pinpoint, Limelight3A limelight){
+    public KalmanFilter(Pose2d startPose, GoBildaPinpointDriverRR pinpoint, Limelight3A limelight){
         estimateState = startPose;
         calculatedState = estimateState;
         timer = new ElapsedTime();
