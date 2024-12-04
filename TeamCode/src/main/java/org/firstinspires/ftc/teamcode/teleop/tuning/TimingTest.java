@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.util.enums.AllianceColor;
 import org.firstinspires.ftc.teamcode.util.enums.ClimbType;
 import org.firstinspires.ftc.teamcode.util.enums.Levels;
+import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,8 @@ public class TimingTest extends LinearOpMode {
     boolean oldLBumper = false;
     boolean oldCross = false;
     boolean oldTriangle = false;
+    boolean oldSquare = false;
+    boolean oldCircle = false;
     double oldTrigger = 0;
     double oldRtrigger = 0.0;
     @Override
@@ -61,7 +64,7 @@ public class TimingTest extends LinearOpMode {
                     );
                 } else {
                     actionsQueue.add(
-                            robot.intakeDrop()
+                            robot.intakeDrop(SampleColors.RED)
                     );
                 }
             }
@@ -94,6 +97,16 @@ public class TimingTest extends LinearOpMode {
             }
             oldTriangle = gamepad1.triangle;
 
+            if (gamepad1.circle && !oldCircle){
+                robot.toggleColorSensor();
+            }
+            oldCircle = gamepad1.circle;
+
+            if (gamepad1.square && !oldSquare){
+                actionsQueue.add(robot.claw.ejectOps(true));
+            }
+            oldSquare = gamepad1.square;
+
             if (gamepad1.left_trigger >= 0.5 && oldTrigger <= 0.5) {
                 actionsQueue.add(
                         new SequentialAction(
@@ -119,9 +132,9 @@ public class TimingTest extends LinearOpMode {
             }
             actionsQueue = newActions;
 
-            double x = -gamepad1.right_stick_x;
-            double y = gamepad1.left_stick_y;
-            double rx = gamepad1.left_stick_x;
+            double x = -gamepad1.left_stick_x;
+            double y = -gamepad1.left_stick_y;
+            double rx = gamepad1.right_stick_x;
             robot.setDrivePower(-x, y, rx);
 
             robot.lift.update();
@@ -143,6 +156,7 @@ public class TimingTest extends LinearOpMode {
             telemetry.addData("LOOPTIME: ", frequency);
             telemetry.addData("state: ", robot.state);
             telemetry.addData("rbumper " ,gamepad1.right_bumper);
+            telemetry.addData("COLOR ENABLED", robot.activateSensor);
             telemetry.update();
         }
     }

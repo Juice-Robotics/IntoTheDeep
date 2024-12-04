@@ -80,6 +80,24 @@ public class Claw {
         }
     }
 
+    public void ejectOps() {
+        setPower((float) -0.5);
+        try {
+            Thread.sleep(500);
+            setPower(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Action ejectOps(boolean action) {
+        return new SequentialAction(
+                new InstantAction(() -> setPower((float) -0.5)),
+                new SleepAction(0.5),
+                new InstantAction(() -> setPower((float) 1))
+        );
+    }
+
     public Action eject(boolean action) {
         return new SequentialAction(
                 new InstantAction(() -> setPower((float) -0.5)),
@@ -152,9 +170,9 @@ public class Claw {
 //        }
 
         if (colorSensor.onlyPin0()) {
-            return SampleColors.RED;
-        } else if (colorSensor.onlyPin1()) {
             return SampleColors.BLUE;
+        } else if (colorSensor.onlyPin1()) {
+            return SampleColors.RED;
         } else if (colorSensor.getBoth()) {
             return SampleColors.YELLOW;
         } else {
