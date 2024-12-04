@@ -108,18 +108,22 @@ public class TimingTest extends LinearOpMode {
             oldSquare = gamepad1.square;
 
             if (gamepad1.left_trigger >= 0.5 && oldTrigger <= 0.5) {
-                actionsQueue.add(
-                        new SequentialAction(
-                                new InstantAction(() -> {
-                                    robot.lift.runToPosition(250);
-                                    robot.arm.runToPreset(Levels.HIGH_BASKET);
-                                }),
-                                new SleepAction(0.5),
-                                robot.claw.eject(true),
-                                new SleepAction(0.5),
-                                robot.stopIntakeAction()
-                        )
-                );
+                if (robot.mode == Robot.Gamepiece.SPECIMEN) {
+                    actionsQueue.add(
+                            new SequentialAction(
+                                    new InstantAction(() -> {
+                                        robot.lift.runToPosition(250);
+                                        robot.arm.runToPreset(Levels.HIGH_BASKET);
+                                    }),
+                                    new SleepAction(0.5),
+                                    robot.claw.eject(true),
+                                    new SleepAction(0.5),
+                                    robot.stopIntakeAction()
+                            )
+                    );
+                } else if (robot.mode == Robot.Gamepiece.SAMPLE) {
+                    actionsQueue.add(robot.lowBasketAction());
+                }
             }
             oldTrigger = gamepad1.left_trigger;
 

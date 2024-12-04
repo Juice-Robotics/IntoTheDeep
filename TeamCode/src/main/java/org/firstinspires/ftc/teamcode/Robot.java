@@ -425,6 +425,15 @@ public class Robot {
         state = Levels.LOW_BASKET;
      }
 
+    public Action lowBasketAction() {
+        return new InstantAction(()-> {
+            arm.runToPreset(Levels.LOW_BASKET);
+            extension.runToPreset(Levels.LOW_BASKET);
+            lift.runToPreset(Levels.LOW_BASKET);
+            state = Levels.LOW_BASKET;
+        });
+    }
+
     public void highBasket() {
         arm.runToPreset(Levels.HIGH_BASKET);
         extension.runToPreset(Levels.HIGH_BASKET);

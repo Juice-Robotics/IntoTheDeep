@@ -13,11 +13,13 @@ public class MotionProfile {
     double cruise_distance;
     double cruise_dt;
     double deceleration_time;
+    double start = 0;
 
     public MotionProfile(double start, double end, double maxvel, double maxaccel) {
         // Calculate the time it takes to accelerate to max velocity
         acceleration_dt = maxvel / maxaccel;
         distance = end - start;
+        this.start = start;
 
         // If its going backwards, make sure to make accel negative
         if (distance < 0) {
@@ -55,13 +57,13 @@ public class MotionProfile {
         // check if we're still in the motion profile
         double entire_dt = acceleration_dt + cruise_dt + deceleration_dt;
         if (time > entire_dt) {
-            return distance;
+            return distance + start;
         }
 
         // if we're accelerating
         if (time < acceleration_dt) {
             // use the kinematic equation for acceleration
-            return 0.5 * maxaccel * Math.pow(time, 2);
+            return (0.5 * maxaccel * Math.pow(time, 2)) + start;
         }
 
         // if we're cruising
@@ -70,7 +72,7 @@ public class MotionProfile {
             cruise_current_dt = time - acceleration_dt;
 
             // use the kinematic equation for constant velocity (i luv mrs moore)
-            return acceleration_distance + (maxvel * cruise_current_dt);
+            return acceleration_distance + (maxvel * cruise_current_dt) + start;
         }
 
         // if we're decelerating
@@ -80,7 +82,7 @@ public class MotionProfile {
             deceleration_time = time - deceleration_time;
 
             // use the kinematic equations to calculate the instantaneous desired position
-            return acceleration_distance + cruise_distance + (maxvel * deceleration_time - 0.5 * maxaccel * Math.pow(deceleration_time, 2));
+            return (acceleration_distance + cruise_distance + (maxvel * deceleration_time - 0.5 * maxaccel * Math.pow(deceleration_time, 2))) + start;
         }
     }
 }
