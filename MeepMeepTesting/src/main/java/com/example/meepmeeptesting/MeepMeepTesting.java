@@ -1,5 +1,6 @@
 package com.example.meepmeeptesting;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
@@ -17,54 +18,31 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(12, -60, Math.toRadians(-90)))
-                .setTangent(2.03444)
-                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), Math.toRadians(110))
+                .setTangent(Math.toRadians(110))
+                .splineToLinearHeading(new Pose2d(0, -40, Math.toRadians(-90)), Math.toRadians(110))
 
-//                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(70)), Math.toRadians(-17))
-//                .waitSeconds(0.5)
-                //.splineToLinearHeading(new Pose2d(34, -40, Math.toRadians(-30)), Math.toRadians(-17))
-                .waitSeconds(0.25)
-                .setReversed(true)
-                .setTangent(Math.toRadians(-17))
-                .splineToLinearHeading(new Pose2d(34, -40, Math.toRadians(25)), Math.toRadians(0))
-                .waitSeconds(0.25)
-                .splineToLinearHeading(new Pose2d(34, -40, Math.toRadians(-35)), Math.toRadians(0))
-                .waitSeconds(0.25)
-                .splineToLinearHeading(new Pose2d(41, -40, Math.toRadians(25)), Math.toRadians(0))
-                .waitSeconds(0.25)
-                .splineToLinearHeading(new Pose2d(40, -40, Math.toRadians(-35)), Math.toRadians(0))
-                .waitSeconds(0.25)
-                .splineToLinearHeading(new Pose2d(41, -40, Math.toRadians(25)), Math.toRadians(0))
-                .waitSeconds(0.25)
-                .splineToLinearHeading(new Pose2d(40, -40, Math.toRadians(-35)), Math.toRadians(0))
-                .waitSeconds(0.25)
-                .splineToLinearHeading(new Pose2d(40, -40, Math.toRadians(-90)), Math.toRadians(-90))
-                .setTangent(9 * Math.PI/10)
-                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
-                .waitSeconds(0.5)
                 .setTangent(-Math.PI/10)
-                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), -Math.PI/10)
+                .splineToLinearHeading(new Pose2d(58, -45, Math.toRadians(70)), -Math.PI/10)
                 .waitSeconds(0.5)
 
+                .lineToYLinearHeading(-51, Math.toRadians(90))
+                .lineToYLinearHeading(-47, Math.toRadians(90))
+                .lineToYLinearHeading(-51, Math.toRadians(90))
+                .lineToYLinearHeading(-45, Math.toRadians(110))
+                .lineToYLinearHeading(-51, Math.toRadians(90))
+                .lineToYLinearHeading(-43, Math.toRadians(-90))
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
-                .waitSeconds(0.5)
                 .setTangent(-Math.PI/10)
-                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), -Math.PI/10)
-                .waitSeconds(0.5)
-
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-55)), -Math.PI/10)
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
-                .waitSeconds(0.5)
                 .setTangent(-Math.PI/10)
-                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), -Math.PI/10)
-//                .waitSeconds(0.5)
-
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-55)), -Math.PI/10)
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
-//                .waitSeconds(0.5)
                 .setTangent(-Math.PI/10)
-                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), -Math.PI/10)
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-55)), -Math.PI/10)
 //                .waitSeconds(0.5)
 ///                .setTangent(Math.toRadians(175))
 ////                .splineToLinearHeading(new Pose2d(-55, -55, Math.PI/4), Math.toRadians(175))

@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -15,53 +16,63 @@ public class MeepMeepTestingDepositForward {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(12, -60, Math.toRadians(-90)))
+                //drive to sub (preload)
                 .setTangent(2.03444)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), Math.toRadians(110))
+                .waitSeconds(0.25)
 
+                //drive to spike1
                 .setReversed(true)
                 .setTangent(Math.toRadians(-17))
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(70)), Math.toRadians(-17))
-                .waitSeconds(0.5)
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(-30)), Math.toRadians(-17))
-                .waitSeconds(0.25)
-
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(60)), 0)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(45, -46, Math.toRadians(60)), 0)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(60)), Math.PI)
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(-30)), Math.PI)
-                .waitSeconds(0.25)
-
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(50)), 0)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(50, -46, Math.toRadians(50)), 0)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(50)), Math.PI)
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(-30)), Math.PI)
-
-                .setTangent(2.89661)
-                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 2.89661)
-                .waitSeconds(0.1)
-                .setTangent(-0.24497)
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(-30)), -0.24497)
+                .splineToLinearHeading(new Pose2d(24, -48, Math.toRadians(45)), Math.toRadians(0))
                 .waitSeconds(0.5)
 
-                .setTangent(2.89661)
-                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 2.89661)
-                .waitSeconds(0.1)
-                .setTangent(-0.24497)
-                .splineToLinearHeading(new Pose2d(40, -46, Math.toRadians(-30)), -0.24497)
+                //turn to observation zone1
+                .splineToLinearHeading(new Pose2d(24, -48, Math.toRadians(-30)), Math.toRadians(0))
                 .waitSeconds(0.5)
 
-                .setTangent(2.89661)
-                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 2.89661)
-                .waitSeconds(0.1)
+                //drive to spike2
+                .splineToLinearHeading(new Pose2d(36, -48, Math.toRadians(45)), Math.toRadians(0))
+                .waitSeconds(0.5)
 
-                .setTangent(-0.58800)
-                .splineToLinearHeading(new Pose2d(36, -60, Math.toRadians(-90)), -0.58800)
+                //turn to observation zone2
+                .splineToLinearHeading(new Pose2d(36, -48, Math.toRadians(-30)), Math.toRadians(0))
+                .waitSeconds(0.5)
+
+                //drive to spike3
+                .splineToLinearHeading(new Pose2d(48, -48, Math.toRadians(45)), Math.toRadians(0))
+                .waitSeconds(0.5)
+
+                //back up + turn to observation zone3
+                .splineToLinearHeading(new Pose2d(36, -48, Math.toRadians(45)), Math.toRadians(180)) //backup to not hit wall with extension
+                .splineToLinearHeading(new Pose2d(36, -48, Math.toRadians(-45)), Math.toRadians(0)) //turns to observation
+                .waitSeconds(0.5)
+
+                //intake 1 specimen + drive to sub (cycle1)
+                .setTangent(9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-45)), 9 * Math.PI/10)
+                .waitSeconds(0.5)
+                .setTangent(9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
+                .waitSeconds(0.5)
+
+                //intake 1 specimen + drive to sub (cycle2)
+                .setTangent(-Math.PI/10)
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-45)), -Math.PI/10)
+                .waitSeconds(0.5)
+                .setTangent(9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
+                .waitSeconds(0.5)
+
+                //intake 1 specimen + drive to sub (cycle3)
+                .setTangent(-Math.PI/10)
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-45)), -Math.PI/10)
+                .setTangent(9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
+                .setTangent(-Math.PI/10)
+
+                //park
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-45)), -Math.PI/10)
 
                 .build());
 
