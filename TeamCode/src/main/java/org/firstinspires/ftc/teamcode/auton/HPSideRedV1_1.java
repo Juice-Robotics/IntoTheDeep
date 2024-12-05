@@ -5,7 +5,9 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SafePathBuilder;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -33,7 +35,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
         cv = new CVMaster(limelight, null);
         drive = new KalmanDrive(hardwareMap, beginPose, limelight);
 
-        Action auton = drive.actionBuilder(drive.pose)
+        Action specimenPreload = drive.actionBuilder(drive.pose)
                 .setTangent(2.03444)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), Math.toRadians(110))
 
@@ -41,40 +43,50 @@ public class HPSideRedV1_1 extends LinearOpMode {
 //                .waitSeconds(0.5)
                 //.splineToLinearHeading(new Pose2d(34, -40, Math.toRadians(-30)), Math.toRadians(-17))
                 .waitSeconds(0.25)
+                .build();
+        Action getPreloads = drive.actionBuilder(new Pose2d(0, -36, Math.toRadians(-90)))
                 .setReversed(true)
                 .setTangent(Math.toRadians(-17))
-                .splineToLinearHeading(new Pose2d(34, -40, Math.toRadians(35)), Math.toRadians(0))
-                .waitSeconds(0.5)
-                .splineToLinearHeading(new Pose2d(34, -40, Math.toRadians(-45)), Math.toRadians(0))
-                .waitSeconds(0.5)
-                .splineToLinearHeading(new Pose2d(41, -40, Math.toRadians(35)), Math.toRadians(0))
-                .waitSeconds(0.5)
-                .splineToLinearHeading(new Pose2d(41, -40, Math.toRadians(-45)), Math.toRadians(0))
-                .waitSeconds(0.5)
-                .splineToLinearHeading(new Pose2d(43, -40, Math.toRadians(35)), Math.toRadians(0))
-                .waitSeconds(0.5)
-                .splineToLinearHeading(new Pose2d(43, -40, Math.toRadians(-45)), Math.toRadians(0))
-                .waitSeconds(0.5)
-                .splineToLinearHeading(new Pose2d(40, -40, Math.toRadians(-90)), Math.toRadians(-90))
-                .waitSeconds(0.5)
-                .setTangent(-Math.PI/10)
-                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), -Math.PI/10)
-                .waitSeconds(0.5)
 
+                .splineToLinearHeading(new Pose2d(30, -40, Math.toRadians(35)), Math.toRadians(0))
+                .waitSeconds(2)
+                .splineToLinearHeading(new Pose2d(30, -40, Math.toRadians(-55)), Math.toRadians(0))
+                .waitSeconds(2)
+
+//                .turn(Math.toRadians(115))
+//                .turn(Math.toRadians(-115))
+//                .lin(2)
+//                .turn(Math.toRadians(115))
+//                .turn(Math.toRadians(-115))
+                //.splineToLinearHeading(new Pose2d(33, -40, Math.toRadians(35)), Math.toRadians(0))
+                //.waitSeconds(2)
+                .splineToLinearHeading(new Pose2d(33, -40, Math.toRadians(-55)), Math.toRadians(0))
+                .waitSeconds(2)
+                .splineToLinearHeading(new Pose2d(35, -40, Math.toRadians(35)), Math.toRadians(0))
+                .waitSeconds(2)
+                .splineToLinearHeading(new Pose2d(35, -40, Math.toRadians(-55)), Math.toRadians(0))
+                .waitSeconds(3)
+                .setTangent(9*Math.PI/10)
+                .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), 9*Math.PI/10)
+                .waitSeconds(0.5)
+                .build();
+        Action cycle1 = drive.actionBuilder(new Pose2d(17, -42, Math.toRadians(-65)))
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
                 .waitSeconds(0.5)
                 .setTangent(-Math.PI/10)
                 .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), -Math.PI/10)
                 .waitSeconds(0.5)
-
+                .build();
+        Action cycle2 = drive.actionBuilder(new Pose2d(17, -42, Math.toRadians(-65)))
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
                 .waitSeconds(0.5)
                 .setTangent(-Math.PI/10)
                 .splineToLinearHeading(new Pose2d(17, -42, Math.toRadians(-65)), -Math.PI/10)
 //                .waitSeconds(0.5)
-
+                .build();
+        Action cycle3 = drive.actionBuilder(new Pose2d(17, -42, Math.toRadians(-65)))
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), 9 * Math.PI/10)
 //                .waitSeconds(0.5)
@@ -88,7 +100,9 @@ public class HPSideRedV1_1 extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        Actions.runBlocking(auton);
+        Actions.runBlocking(
+                new SequentialAction(specimenPreload, getPreloads)
+        );
 //        Actions.runBlocking(
 //                new SequentialAction(
 //                        new ParallelAction(

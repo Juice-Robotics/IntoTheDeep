@@ -73,12 +73,13 @@ public class MecanumDrive {
         // drive model parameters
         public double inPerTick = 1; // SparkFun OTOS Note: you can probably leave this at 1
         public double lateralInPerTick = 0.700324964653836;
-        public double trackWidthTicks = 10.574026021669907;
+        //public double trackWidthTicks = 10.574026021669907;
+        public double trackWidthTicks = 11.28295868800594;
 
         // feedforward parameters (in tick units)
-        public double kS = 0.095;
-        public double kV = 0.125;
-        public double kA = 0.052;
+        public double kS = 0.9;
+        public double kV = 0.09;
+        public double kA = 0.055;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 70;
@@ -92,11 +93,11 @@ public class MecanumDrive {
         // path controller gains
         public double axialGain = 2;
         public double lateralGain = 3;
-        public double headingGain = 2; // shared with turn
+        public double headingGain = 2.5; // shared with turn
 
-        public double axialVelGain = 0;
+        public double axialVelGain = 1;
         public double lateralVelGain = 0.0;
-        public double headingVelGain = 0.0; // shared with turn
+        public double headingVelGain = 1; // shared with turn
     }
 
     public static Params PARAMS = new Params();
@@ -247,7 +248,7 @@ public class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new DriveLocalizer();
+        localizer = null;
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }

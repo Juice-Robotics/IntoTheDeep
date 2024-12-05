@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 //import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -37,8 +38,8 @@ public class KalmanTuner extends LinearOpMode {
     Motor frontLeft;
     Motor frontRight;
 
-    public static double odoXOffset = -43.18;
-    public static double odoYOffset = -22.225;
+    public static double odoXOffset = DistanceUnit.MM.fromInches(0);
+    public static double odoYOffset =  DistanceUnit.MM.fromInches(5.125);
     public static double otosXOffset = 0;
     public static double otosYOffset =  6.625; //6.625
     public static double otosHeadingOffset = Math.toRadians(90);
@@ -69,8 +70,8 @@ public class KalmanTuner extends LinearOpMode {
 //        odo.resetPosAndIMU();
         odo.setOffsets(odoXOffset, odoYOffset);
         odo.recalibrateIMU();
-        odo.setEncoderResolution(GoBildaPinpointDriverRR.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriverRR.EncoderDirection.REVERSED, GoBildaPinpointDriverRR.EncoderDirection.FORWARD);
+        odo.setEncoderResolution(GoBildaPinpointDriverRR.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriverRR.EncoderDirection.FORWARD, GoBildaPinpointDriverRR.EncoderDirection.FORWARD);
         odo.setPosition(new Pose2D(DistanceUnit.INCH, startingX, startingY, AngleUnit.RADIANS, startingHeading));
 
 //        otos.setLinearUnit(DistanceUnit.INCH);
