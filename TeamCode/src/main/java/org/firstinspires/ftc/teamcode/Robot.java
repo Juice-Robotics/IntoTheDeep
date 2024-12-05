@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -37,6 +38,14 @@ import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 import org.firstinspires.ftc.teamcode.util.hardware.StepperServo;
 import org.firstinspires.ftc.teamcode.util.misc.FullPose2d;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class Robot {
 
     // SUBSYSTEM DECLARATIONS
@@ -55,6 +64,7 @@ public class Robot {
     // STATE VARS
     boolean auton;
     boolean intaking = false;
+    public boolean activateSensor = true;
     public boolean l3ClimbOverride = false;
     public Levels state = Levels.INIT;
     public Gamepiece mode = Gamepiece.SAMPLE;
@@ -78,8 +88,8 @@ public class Robot {
 
 //        this.cv = new CVMaster(map);
         this.components = new Component[]{
-                new Motor(0, "leftBack", map, false),                //0 left odometer
-                new Motor(1, "rightBack", map, true),              //1 right odometer
+                new Motor(0, "leftBack", map, true),                //0 left odometer
+                new Motor(1, "rightBack", map, false),              //1 right odometer
                 new Motor(2, "leftFront", map, true),               //2 middle odometer
                 new Motor(3, "rightFront", map, false),             //3
 
@@ -223,6 +233,10 @@ public class Robot {
         }
     }
 
+    public void toggleColorSensor() {
+        activateSensor = !activateSensor;
+    }
+
     public void toggleGamepiece(Gamepiece p) {
         mode = p;
     }
@@ -313,16 +327,39 @@ public class Robot {
         );
     }
 
-    public Action intakeDrop() {
-        return new SequentialAction(
-            new InstantAction(() -> {
-                claw.startIntake();
-                arm.runToPreset(Levels.INTAKE);
-                intaking = true;
-                state = Levels.INTAKE;
-            })
-//                commands.stopIntake(SampleColors.RED, SampleColors.YELLOW)
-        );
+    public Action intakeDrop(SampleColors alliance) {
+        if (activateSensor) {
+            if (mode == Gamepiece.SAMPLE) {
+                return new SequentialAction(
+                        new InstantAction(() -> {
+                            claw.startIntake();
+                            arm.runToPreset(Levels.INTAKE);
+                            intaking = true;
+                            state = Levels.INTAKE;
+                        }),
+                        commands.stopIntake(SampleColors.YELLOW, alliance)
+                        );
+            } else {
+                return new SequentialAction(
+                        new InstantAction(() -> {
+                            claw.startIntake();
+                            arm.runToPreset(Levels.INTAKE);
+                            intaking = true;
+                            state = Levels.INTAKE;
+                        }),
+                        commands.stopIntake(alliance)
+                );
+            }
+        } else {
+            return new SequentialAction(
+                    new InstantAction(() -> {
+                        claw.startIntake();
+                        arm.runToPreset(Levels.INTAKE);
+                        intaking = true;
+                        state = Levels.INTAKE;
+                    })
+            );
+        }
     }
 
     public void autonObParkPreset() {
@@ -359,19 +396,24 @@ public class Robot {
 
     }
 
+    private ElapsedTime colorTimeout = new ElapsedTime();
+    boolean timerStarted = false;
     public boolean autoStopIntakeUpdate(SampleColors... colors) {
         int r = claw.smartStopDetect(colors);
-        switch (r) {
-            case 0:
-                return true;
-            case 1:
+        if (r == 0 && colorTimeout.time() > 0) {
+            timerStarted = false;
+            return true;
+        } else if (r == 1 && timerStarted && colorTimeout.time() > 0.000) {
                 stopIntake();
                 return false;
-            case -1:
-                claw.eject();
-                intakeDrop();
+        } else if (r == -1 && timerStarted && colorTimeout.time() > 0.000) {
+                claw.ejectOps();
                 return true;
+        } else if ((r == 1 || r == -1) && !timerStarted) {
+            timerStarted = true;
+            colorTimeout.reset();
         }
+
         return true;
     }
 
@@ -382,6 +424,15 @@ public class Robot {
         lift.runToPreset(Levels.LOW_BASKET);
         state = Levels.LOW_BASKET;
      }
+
+    public Action lowBasketAction() {
+        return new InstantAction(()-> {
+            arm.runToPreset(Levels.LOW_BASKET);
+            extension.runToPreset(Levels.LOW_BASKET);
+            lift.runToPreset(Levels.LOW_BASKET);
+            state = Levels.LOW_BASKET;
+        });
+    }
 
     public void highBasket() {
         arm.runToPreset(Levels.HIGH_BASKET);

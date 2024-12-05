@@ -56,7 +56,7 @@ public class TeleOpMainRed extends LinearOpMode {
                 } else {
                     actionsQueue.add(
                             new SequentialAction(
-                            robot.intakeDrop(),
+                            robot.intakeDrop(SampleColors.RED),
                                     robot.commands.stopIntake(SampleColors.RED)
                             )
                     );
