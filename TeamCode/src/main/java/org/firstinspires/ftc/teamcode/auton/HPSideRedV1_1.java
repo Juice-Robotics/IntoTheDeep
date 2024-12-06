@@ -136,7 +136,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                     new InstantAction(()->robot.extension.runToPosition(225))),
                                     intake1
                                 ),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 new ParallelAction(
                                         deposit,
                                         new InstantAction(robot::highRung)
@@ -152,11 +152,11 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                         intake2,
                                         new SequentialAction(
                                                 robot.retractedIntakePreset(true),
-                                                new SleepAction(1.5),
+                                                new SleepAction(2),
                                                 new InstantAction(()->robot.extension.runToPosition(225))
                                         )
                                 ),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 new ParallelAction(
                                         deposit2,
                                         new InstantAction(robot::highRung)
@@ -172,11 +172,11 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                         intake3,
                                         new SequentialAction(
                                                 robot.retractedIntakePreset(true),
-                                                new SleepAction(1.5),
+                                                new SleepAction(2),
                                                 new InstantAction(()->robot.extension.runToPosition(225))
                                         )
                                 ),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 new ParallelAction(
                                         deposit3,
                                         new InstantAction(robot::highRung)
