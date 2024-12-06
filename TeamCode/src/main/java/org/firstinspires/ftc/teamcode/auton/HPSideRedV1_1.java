@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -29,31 +30,37 @@ public class HPSideRedV1_1 extends LinearOpMode {
     public void runOpMode() {
         Pose2d beginPose = new Pose2d(12, -60, Math.toRadians(-90));
         PoseKeeper.set(beginPose);
-//        robot = new Robot(hardwareMap, true);
+        robot = new Robot(hardwareMap, true);
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         cv = new CVMaster(limelight, null);
         drive = new KalmanDrive(hardwareMap, beginPose, limelight);
 
         Action preloadDrive = drive.actionBuilder(drive.pose)
                 .setTangent(2.03444)
-                .splineToLinearHeading(new Pose2d(0, -36, Math.toRadians(-90)), Math.toRadians(110))
+                .splineToLinearHeading(new Pose2d(0, -29, Math.toRadians(-90)), Math.toRadians(110))
                 .waitSeconds(0.25)
                 .build();
         telemetry.addData("is","starting");
         telemetry.update();
+        robot.initSubsystems();
         waitForStart();
-
         if (isStopRequested()) return;
-
         Actions.runBlocking(
                 new ParallelAction(
                         new SequentialAction(
                                 // PRELOAD DEPOSIT
                                 new ParallelAction(
                                         preloadDrive,
-                                        new InstantAction(robot::preloadHighRung)
+                                        new SequentialAction(
+//                                            new SleepAction(1),
+                                            new InstantAction(robot::highRung)
+                                        )
                                 ),
-                                robot.smartOuttake(true)
+//                                new SleepAction(0.5),
+                                robot.outtakeSpecimen(true),
+                                new InstantAction(() -> robot.lift.runToPosition(810)),
+                                new SleepAction(0.2),
+                                new InstantAction(robot::intermediatePreset)
 
 //                                // SPIKE RIGHT
 //                                new ParallelAction(
@@ -153,10 +160,10 @@ public class HPSideRedV1_1 extends LinearOpMode {
                         ),
                         new LoopAction(() -> {
                             robot.lift.update();
-                            PoseKeeper.set(robot.drive.pose);
+//                            PoseKeeper.set(robot.drive.pose);
                         }, this::isStopRequested)
                 )
         );
-        robot.cv.kill();
+       // robot.cv.kill();
     }
 }

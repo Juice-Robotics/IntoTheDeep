@@ -134,12 +134,17 @@ public class Robot {
         frontRight = (Motor) components[3];
     }
 
-    public Action initSubsystems(){
+    public Action initSubsystems(boolean action){
         return new InstantAction(()->{
             arm.runToPreset(Levels.INIT);
             lift.runToPreset(Levels.INIT);
             extension.runToPreset(Levels.INIT);
         });
+    }
+    public void initSubsystems(){
+        arm.runToPreset(Levels.INIT);
+        lift.runToPreset(Levels.INIT);
+        extension.runToPreset(Levels.INIT);
     }
     public Action generateTeleOpAutomatedIntake(Gamepad gamepad) {
         CVMaster.EOCVPipeline targetPipeline = CVMaster.EOCVPipeline.YELLOW_SAMPLE;

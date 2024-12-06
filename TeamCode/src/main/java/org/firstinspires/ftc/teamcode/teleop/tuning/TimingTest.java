@@ -48,7 +48,7 @@ public class TimingTest extends LinearOpMode {
         List<Action> actionsQueue = new ArrayList<>();
 
         waitForStart();
-        robot.initSubsystems();
+//        robot.initSubsystems(true);
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
