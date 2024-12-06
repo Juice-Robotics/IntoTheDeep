@@ -63,14 +63,20 @@ public class HPSideRedV1_1 extends LinearOpMode {
         Action back = drive.actionBuilder(new Pose2d(38, -44.5, Math.toRadians(-60)))
                 .setReversed(true)
                 .setTangent(9 * Math.PI/10)
-                .splineToLinearHeading(new Pose2d(22, -37, Math.toRadians(-45)), 9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(20, -35, Math.toRadians(-45)), 9 * Math.PI/10)
                 .build();
         Action intake1 = drive.actionBuilder(new Pose2d(22, -37, Math.toRadians(-45)))
                 .setReversed(false)
-                .lineToX(35)
+                .lineToX(26)
 //                .setTangent(9 * Math.PI/10)
 //                .splineToLinearHeading(new Pose2d(38, -44.5, Math.toRadians(-60)), 9 * Math.PI/10)
                 .build();
+        Action back1 = drive.actionBuilder(new Pose2d(22, -37, Math.toRadians(-45)))
+                .setTangent(9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(-6, -27, Math.toRadians(-90)), Math.PI/2)
+                .waitSeconds(0.5)
+                .build();
+
         telemetry.addData("is","starting");
         telemetry.update();
         robot.initSubsystems();
@@ -116,11 +122,26 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 ,
                                 robot.claw.ejectOpsAuton(true),
                                 back,
+                                new SleepAction(0.9),
                                 new ParallelAction(
-                                    new InstantAction(()->robot.extension.runToPosition(225)),
+                                    new SequentialAction(new SleepAction(0.5),
+                                    new InstantAction(()->robot.extension.runToPosition(225))),
                                     intake1
-                                )
-//                                robot.outtakeSample(true),
+                                ),
+                                new SleepAction(1.4),
+                                new ParallelAction(
+                                        back1,
+                                        new InstantAction(robot::highRung)
+//                                        new SequentialAction(
+//                                            new SleepAction(0.5),
+//
+//                                        )
+                                ),
+                                robot.outtakeSpecimen(true),
+                                new InstantAction(() -> robot.lift.runToPosition(810)),
+                                new SleepAction(0.1),
+                                new InstantAction(() -> robot.intermediatePreset())
+
 
 //
 //                                // SPIKE CENTER
