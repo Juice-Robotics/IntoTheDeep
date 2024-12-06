@@ -59,7 +59,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
         Action back = drive.actionBuilder(new Pose2d(38, -44.5, Math.toRadians(-60)))
                 .setReversed(true)
                 .setTangent(9 * Math.PI/10)
-                .splineToLinearHeading(new Pose2d(20, -35, Math.toRadians(-45)), 9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(21, -36, Math.toRadians(-45)), 9 * Math.PI/10)
                 .build();
         Action intake1 = drive.actionBuilder(new Pose2d(20, -35, Math.toRadians(-45)))
                 .setReversed(false)
@@ -67,27 +67,26 @@ public class HPSideRedV1_1 extends LinearOpMode {
                 .build();
         Action deposit = drive.actionBuilder(new Pose2d(22, -37, Math.toRadians(-45)))
                 .setTangent(9 * Math.PI/10)
-                .splineToLinearHeading(new Pose2d(-6, -27, Math.toRadians(-90)), Math.PI/2)
+                .splineToLinearHeading(new Pose2d(0, -28, Math.toRadians(-90)), Math.PI/2)
                 .build();
         Action intake2 = drive.actionBuilder(new Pose2d(-6, -27, Math.toRadians(-90)))
                 .setReversed(false)
                 .setTangent(-4*Math.PI/10)
-                .splineToLinearHeading(new Pose2d(23, -39,  Math.toRadians(-45)), 9*Math.PI/10)
+                .splineToLinearHeading(new Pose2d(24, -40,  Math.toRadians(-45)), 9*Math.PI/10)
                 .build();
-        Action back2 = drive.actionBuilder(new Pose2d(23, -39, Math.toRadians(-45)))
+        Action deposit2 = drive.actionBuilder(new Pose2d(23, -39, Math.toRadians(-45)))
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -27, Math.toRadians(-90)), Math.PI/2)
                 .waitSeconds(0.5)
                 .build();
-        Action intake3 = drive.actionBuilder(new Pose2d(0, -27, Math.toRadians(-90)))
+        Action intake3 = drive.actionBuilder(new Pose2d(-5, -27, Math.toRadians(-90)))
                 .setReversed(false)
                 .setTangent(-4*Math.PI/10)
-                .splineToLinearHeading(new Pose2d(23, -39,  Math.toRadians(-45)), 9*Math.PI/10)
+                .splineToLinearHeading(new Pose2d(25, -41,  Math.toRadians(-45)), 9*Math.PI/10)
                 .build();
-        Action back3 = drive.actionBuilder(new Pose2d(23, -39, Math.toRadians(-45)))
+        Action deposit3 = drive.actionBuilder(new Pose2d(23, -39, Math.toRadians(-45)))
                 .setTangent(9 * Math.PI/10)
-                .splineToLinearHeading(new Pose2d(5, -27.5, Math.toRadians(-90)), Math.PI/2)
-                .waitSeconds(0.5)
+                .splineToLinearHeading(new Pose2d(-10, -27.5, Math.toRadians(-90)), Math.PI/2)
                 .build();
         telemetry.addData("Status","starting");
         telemetry.update();
@@ -131,13 +130,13 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 robot.claw.ejectOpsAuton(true),
                                 back,
                                 //cycle1
-                                new SleepAction(1),
+                                new SleepAction(0.5),
                                 new ParallelAction(
-                                    new SequentialAction(new SleepAction(0.5),
+                                    new SequentialAction(new SleepAction(1),
                                     new InstantAction(()->robot.extension.runToPosition(225))),
                                     intake1
                                 ),
-                                new SleepAction(1),
+                                new SleepAction(0.5),
                                 new ParallelAction(
                                         deposit,
                                         new InstantAction(robot::highRung)
@@ -152,15 +151,14 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 new ParallelAction(
                                         intake2,
                                         new SequentialAction(
-                                                new SleepAction(0.1),
                                                 robot.retractedIntakePreset(true),
-                                                new SleepAction(0.8),
+                                                new SleepAction(1),
                                                 new InstantAction(()->robot.extension.runToPosition(225))
                                         )
                                 ),
-                                new SleepAction(1.2),
+                                new SleepAction(0.5),
                                 new ParallelAction(
-                                        back2,
+                                        deposit2,
                                         new InstantAction(robot::highRung)
                                 ),
                                 robot.outtakeSpecimen(true),
@@ -173,15 +171,14 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 new ParallelAction(
                                         intake3,
                                         new SequentialAction(
-                                                new SleepAction(0.1),
                                                 robot.retractedIntakePreset(true),
-                                                new SleepAction(0.75),
+                                                new SleepAction(1),
                                                 new InstantAction(()->robot.extension.runToPosition(225))
                                         )
                                 ),
-                                new SleepAction(1.2),
+                                new SleepAction(0.5),
                                 new ParallelAction(
-                                        back3,
+                                        deposit3,
                                         new InstantAction(robot::highRung)
                                 ),
                                 robot.outtakeSpecimen(true),
