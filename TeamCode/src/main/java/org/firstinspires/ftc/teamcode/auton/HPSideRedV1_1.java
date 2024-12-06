@@ -45,20 +45,31 @@ public class HPSideRedV1_1 extends LinearOpMode {
         Action spike1 = drive.actionBuilder(new Pose2d(0, -29, Math.toRadians(-90)))
                 .setReversed(true)
                 .setTangent(Math.toRadians(-17))
-                .splineToLinearHeading(new Pose2d(38.5, -44.5, Math.toRadians(67)), Math.toRadians(67))
+                .splineToLinearHeading(new Pose2d(38.5, -42.5, Math.toRadians(67)), Math.toRadians(67))
                 .waitSeconds(0.5)
                 .build();
-        Action observation1 = drive.actionBuilder(new Pose2d(38.5, -44.5, Math.toRadians(67)))
+        Action observation1 = drive.actionBuilder(new Pose2d(39.5, -43, Math.toRadians(67)))
                 .splineToLinearHeading(new Pose2d(35, -44.5, Math.toRadians(-55)), Math.toRadians(0))
                 .waitSeconds(0.5)
                 .build();
         Action spike2 = drive.actionBuilder(new Pose2d(35, -44.5, Math.toRadians(-55)))
-                .splineToLinearHeading(new Pose2d(49, -46, Math.toRadians(80)), Math.toRadians(70))
+                .splineToLinearHeading(new Pose2d(51.5, -42, Math.toRadians(80)), Math.toRadians(70))
                 .waitSeconds(0.5)
                 .build();
-        Action observation2 = drive.actionBuilder(new Pose2d(49, -46, Math.toRadians(80)))
+        Action observation2 = drive.actionBuilder(new Pose2d(51.5, -42, Math.toRadians(80)))
                 .splineToLinearHeading(new Pose2d(38, -44.5, Math.toRadians(-60)), Math.toRadians(0))
                 .waitSeconds(0.5)
+                .build();
+        Action back = drive.actionBuilder(new Pose2d(38, -44.5, Math.toRadians(-60)))
+                .setReversed(true)
+                .setTangent(9 * Math.PI/10)
+                .splineToLinearHeading(new Pose2d(22, -37, Math.toRadians(-45)), 9 * Math.PI/10)
+                .build();
+        Action intake1 = drive.actionBuilder(new Pose2d(22, -37, Math.toRadians(-45)))
+                .setReversed(false)
+                .lineToX(35)
+//                .setTangent(9 * Math.PI/10)
+//                .splineToLinearHeading(new Pose2d(38, -44.5, Math.toRadians(-60)), 9 * Math.PI/10)
                 .build();
         telemetry.addData("is","starting");
         telemetry.update();
@@ -88,7 +99,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
 
                                 ),
                                 new InstantAction(()->robot.extension.runToPosition(225)),
-                                new SleepAction(0.5),
+                                new SleepAction(1.4),
                                 new InstantAction(() -> robot.arm.runToPreset(Levels.INTAKE_INTERMEDIATE)),
 //                                robot.commands.stopIntake(SampleColors.RED),
                                 observation1,
@@ -98,12 +109,17 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 new InstantAction(() -> robot.arm.runToPreset(Levels.INTAKE)),
                                 spike2,
                                 new InstantAction(()->robot.extension.runToPosition(225)),
-                                new SleepAction(0.7),
+                                new SleepAction(1.4),
                                 new ParallelAction(
                                         new InstantAction(()->robot.extension.runToPosition(200)),
                                         observation2)
                                 ,
-                                robot.claw.ejectOpsAuton(true)
+                                robot.claw.ejectOpsAuton(true),
+                                back,
+                                new ParallelAction(
+                                    new InstantAction(()->robot.extension.runToPosition(225)),
+                                    intake1
+                                )
 //                                robot.outtakeSample(true),
 
 //
