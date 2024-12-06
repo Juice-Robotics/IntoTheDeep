@@ -6,8 +6,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.Actions;
-import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -19,6 +18,7 @@ import org.firstinspires.ftc.teamcode.commands.LoopAction;
 import org.firstinspires.ftc.teamcode.roadrunner.KalmanDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.subsystems.vision.CVMaster;
+import org.firstinspires.ftc.teamcode.util.enums.Levels;
 import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 import org.firstinspires.ftc.teamcode.util.misc.FullPose2d;
 
@@ -44,7 +44,15 @@ public class HPSideRedV1_1 extends LinearOpMode {
         Action spike1 = drive.actionBuilder(new Pose2d(0, -29, Math.toRadians(-90)))
                 .setReversed(true)
                 .setTangent(Math.toRadians(-17))
-                .splineToLinearHeading(new Pose2d(24, -48, Math.toRadians(45)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(31, -44, Math.toRadians(57)), Math.toRadians(80))
+                .waitSeconds(0.5)
+                .build();
+        Action observation1 = drive.actionBuilder(new Pose2d(31, -44, Math.toRadians(57)))
+                .splineToLinearHeading(new Pose2d(32, -45.5, Math.toRadians(-45)), Math.toRadians(0))
+                .waitSeconds(0.5)
+                .build();
+        Action spike2 = drive.actionBuilder(new Pose2d(32, -45.5, Math.toRadians(-45)))
+                .splineToLinearHeading(new Pose2d(36, -48, Math.toRadians(45)), Math.toRadians(0))
                 .waitSeconds(0.5)
                 .build();
         telemetry.addData("is","starting");
@@ -68,21 +76,22 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 new InstantAction(() -> robot.lift.runToPosition(810)),
                                 new SleepAction(0.2),
                                 new InstantAction(robot::intermediatePreset),
-
 //                                // SPIKE RIGHT
                                 new ParallelAction(
-                                        spike1
-//                                        new SequentialAction(
-//                                                new SleepAction(0.5),
-//                                                robot.intakePreset(50, true)
-
-                                )
+                                        spike1,
+                                        new SequentialAction(
+                                                new SleepAction(1),
+                                                robot.intakePreset(50, true)
+                                        )
+                                ),
 //                                robot.commands.stopIntake(SampleColors.RED),
-//                                new ParallelAction(
-//                                        driveToObR,
-//                                        new InstantAction(robot::preloadDropPreset)
-//                                ),
+                                observation1,
+                                robot.claw.ejectOpsAuton(true),
+                                new InstantAction(()->robot.extension.runToPosition(160)),
+                                spike2,
+                                new InstantAction(()->robot.extension.runToPreset(Levels.INTAKE))
 //                                robot.outtakeSample(true),
+
 //
 //                                // SPIKE CENTER
 //                                new ParallelAction(

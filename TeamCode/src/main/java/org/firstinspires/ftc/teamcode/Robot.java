@@ -301,19 +301,21 @@ public class Robot {
         return new SequentialAction(
                 new InstantAction(() -> {
                     lift.runToPreset(Levels.INTAKE);
-                    //TODO: CONVERT FROM INCHES TO TICKS
-                    extension.runToPosition((float) extTicks);
+                    extension.runToPreset(Levels.INTAKE);
                 }),
-//                commands.waitForExtension((float) (extTicks - 20)),
-                new SleepAction(1),
-                new InstantAction(() -> arm.runToPreset(Levels.INTAKE_INTERMEDIATE)),
-                new SleepAction(1),
+                new SleepAction(0.5),
                 new InstantAction(() -> {
-                    arm.runToPreset(Levels.INTAKE);
+                    arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
+                    lift.slides1.resetEncoder();
+                    state = Levels.INTAKE_INTERMEDIATE;
+                }),
+                new SleepAction(0.2),
+                new InstantAction(()->{
                     claw.startIntake();
+                    arm.runToPreset(Levels.INTAKE);
                     intaking = true;
-                    state = Levels.INTAKE;
-                })
+                    state = Levels.INTAKE;})
+
         );
     }
 

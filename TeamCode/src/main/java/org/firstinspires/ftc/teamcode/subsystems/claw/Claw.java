@@ -97,6 +97,13 @@ public class Claw {
                 new InstantAction(() -> setPower((float) 1))
         );
     }
+    public Action ejectOpsAuton(boolean action) {
+        return new SequentialAction(
+                new InstantAction(() -> setPower((float) -1)),
+                new SleepAction(0.5),
+                new InstantAction(() -> setPower((float) 1))
+        );
+    }
 
     public Action eject(boolean action) {
         return new SequentialAction(
