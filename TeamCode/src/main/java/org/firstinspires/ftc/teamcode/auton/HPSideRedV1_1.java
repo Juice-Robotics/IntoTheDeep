@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -44,10 +45,11 @@ public class HPSideRedV1_1 extends LinearOpMode {
         Action spike1 = drive.actionBuilder(new Pose2d(0, -29, Math.toRadians(-90)))
                 .setReversed(true)
                 .setTangent(Math.toRadians(-17))
-                .splineToLinearHeading(new Pose2d(31, -44, Math.toRadians(57)), Math.toRadians(80))
+                .splineToLinearHeading(new Pose2d(28, -50, Math.toRadians(57)), Math.toRadians(80))
+                .splineToLinearHeading(new Pose2d(32, -44, Math.toRadians(57)), Math.toRadians(57))
                 .waitSeconds(0.5)
                 .build();
-        Action observation1 = drive.actionBuilder(new Pose2d(31, -44, Math.toRadians(57)))
+        Action observation1 = drive.actionBuilder(new Pose2d(32, -44, Math.toRadians(57)))
                 .splineToLinearHeading(new Pose2d(32, -45.5, Math.toRadians(-45)), Math.toRadians(0))
                 .waitSeconds(0.5)
                 .build();
@@ -80,7 +82,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 new ParallelAction(
                                         spike1,
                                         new SequentialAction(
-                                                new SleepAction(1),
+                                                new SleepAction(0.7),
                                                 robot.intakePreset(50, true)
                                         )
                                 ),
