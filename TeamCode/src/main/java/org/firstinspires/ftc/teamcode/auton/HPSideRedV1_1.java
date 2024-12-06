@@ -6,7 +6,8 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.ftc.Actions;
+import com.acmerobotics.roadrunner.Actions;
+import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -40,6 +41,12 @@ public class HPSideRedV1_1 extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(0, -29, Math.toRadians(-90)), Math.toRadians(110))
                 .waitSeconds(0.25)
                 .build();
+        Action spike1 = drive.actionBuilder(new Pose2d(0, -29, Math.toRadians(-90)))
+                .setReversed(true)
+                .setTangent(Math.toRadians(-17))
+                .splineToLinearHeading(new Pose2d(24, -48, Math.toRadians(45)), Math.toRadians(0))
+                .waitSeconds(0.5)
+                .build();
         telemetry.addData("is","starting");
         telemetry.update();
         robot.initSubsystems();
@@ -60,16 +67,16 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 robot.outtakeSpecimen(true),
                                 new InstantAction(() -> robot.lift.runToPosition(810)),
                                 new SleepAction(0.2),
-                                new InstantAction(robot::intermediatePreset)
+                                new InstantAction(robot::intermediatePreset),
 
 //                                // SPIKE RIGHT
-//                                new ParallelAction(
-//                                        driveToSpikeR,
+                                new ParallelAction(
+                                        spike1
 //                                        new SequentialAction(
 //                                                new SleepAction(0.5),
 //                                                robot.intakePreset(50, true)
-//                                        )
-//                                ),
+
+                                )
 //                                robot.commands.stopIntake(SampleColors.RED),
 //                                new ParallelAction(
 //                                        driveToObR,
