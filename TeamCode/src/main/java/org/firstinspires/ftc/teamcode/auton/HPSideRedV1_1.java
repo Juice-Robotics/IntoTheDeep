@@ -45,15 +45,19 @@ public class HPSideRedV1_1 extends LinearOpMode {
         Action spike1 = drive.actionBuilder(new Pose2d(0, -29, Math.toRadians(-90)))
                 .setReversed(true)
                 .setTangent(Math.toRadians(-17))
-                .splineToLinearHeading(new Pose2d(38, -44.5, Math.toRadians(67)), Math.toRadians(67))
+                .splineToLinearHeading(new Pose2d(38.5, -44.5, Math.toRadians(67)), Math.toRadians(67))
                 .waitSeconds(0.5)
                 .build();
-        Action observation1 = drive.actionBuilder(new Pose2d(38, -44.5, Math.toRadians(67)))
-                .splineToLinearHeading(new Pose2d(37, -44.5, Math.toRadians(-45)), Math.toRadians(0))
+        Action observation1 = drive.actionBuilder(new Pose2d(38.5, -44.5, Math.toRadians(67)))
+                .splineToLinearHeading(new Pose2d(35, -44.5, Math.toRadians(-55)), Math.toRadians(0))
                 .waitSeconds(0.5)
                 .build();
-        Action spike2 = drive.actionBuilder(new Pose2d(37, -44.5, Math.toRadians(-45)))
-                .splineToLinearHeading(new Pose2d(36, -48, Math.toRadians(45)), Math.toRadians(0))
+        Action spike2 = drive.actionBuilder(new Pose2d(35, -44.5, Math.toRadians(-55)))
+                .splineToLinearHeading(new Pose2d(49, -46, Math.toRadians(80)), Math.toRadians(70))
+                .waitSeconds(0.5)
+                .build();
+        Action observation2 = drive.actionBuilder(new Pose2d(49, -46, Math.toRadians(80)))
+                .splineToLinearHeading(new Pose2d(38, -44.5, Math.toRadians(-60)), Math.toRadians(0))
                 .waitSeconds(0.5)
                 .build();
         telemetry.addData("is","starting");
@@ -80,19 +84,26 @@ public class HPSideRedV1_1 extends LinearOpMode {
 //                                // SPIKE RIGHT
                                 new ParallelAction(
                                         spike1,
-                                        new SequentialAction(
-                                                robot.intakePreset(50, true),
-                                                new InstantAction(()->robot.extension.runToPosition(200))
-                                        )
+                                        robot.retractedIntakePreset(true)
+
                                 ),
                                 new InstantAction(()->robot.extension.runToPosition(225)),
-                                new SleepAction(1),
+                                new SleepAction(0.5),
+                                new InstantAction(() -> robot.arm.runToPreset(Levels.INTAKE_INTERMEDIATE)),
 //                                robot.commands.stopIntake(SampleColors.RED),
                                 observation1,
                                 robot.claw.ejectOpsAuton(true),
-                                new InstantAction(()->robot.extension.runToPosition(200)),
+                                new InstantAction(()->robot.extension.runToPosition(190)),
+                                new SleepAction(0.3),
+                                new InstantAction(() -> robot.arm.runToPreset(Levels.INTAKE)),
                                 spike2,
-                                new InstantAction(()->robot.extension.runToPosition(225))
+                                new InstantAction(()->robot.extension.runToPosition(225)),
+                                new SleepAction(0.7),
+                                new ParallelAction(
+                                        new InstantAction(()->robot.extension.runToPosition(200)),
+                                        observation2)
+                                ,
+                                robot.claw.ejectOpsAuton(true)
 //                                robot.outtakeSample(true),
 
 //

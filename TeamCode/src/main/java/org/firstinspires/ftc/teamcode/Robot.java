@@ -319,6 +319,28 @@ public class Robot {
         );
     }
 
+    public Action retractedIntakePreset(boolean action) {
+        return new SequentialAction(
+                new InstantAction(() -> {
+                    lift.runToPreset(Levels.INTAKE);
+                    extension.runToPosition(200);
+                }),
+                new SleepAction(0.5),
+                new InstantAction(() -> {
+                    arm.runToPreset(Levels.INTAKE_INTERMEDIATE);
+                    lift.slides1.resetEncoder();
+                    state = Levels.INTAKE_INTERMEDIATE;
+                }),
+                new SleepAction(0.2),
+                new InstantAction(()->{
+                    claw.startIntake();
+                    arm.runToPreset(Levels.INTAKE);
+                    intaking = true;
+                    state = Levels.INTAKE;})
+
+        );
+    }
+
     public Action teleIntakePreset(boolean action) {
         return new SequentialAction(
             new InstantAction(() -> {
