@@ -39,10 +39,10 @@ public class HPSideRedV1_1 extends LinearOpMode {
 
         Action preloadDrive = drive.actionBuilder(drive.pose)
                 .setTangent(2.03444)
-                .splineToLinearHeading(new Pose2d(0, -28.5, Math.toRadians(-90)), Math.toRadians(110))
-                .waitSeconds(0.1)
+                .splineToLinearHeading(new Pose2d(0, -28, Math.toRadians(-90)), Math.toRadians(110))
+                .waitSeconds(0.5)
                 .build();
-        Action spike1 = drive.actionBuilder(new Pose2d(0, -29, Math.toRadians(-90)))
+        Action spike1 = drive.actionBuilder(new Pose2d(0, -28.5, Math.toRadians(-90)))
                 .setReversed(true)
                 .setTangent(Math.toRadians(-17))
                 .splineToLinearHeading(new Pose2d(38, -43, Math.toRadians(67)), Math.toRadians(67))
