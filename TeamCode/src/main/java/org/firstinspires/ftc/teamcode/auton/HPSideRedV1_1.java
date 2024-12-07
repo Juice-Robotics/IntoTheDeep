@@ -99,7 +99,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 // PRELOAD DEPOSIT
                                 new ParallelAction(
                                         preloadDrive,
-                                        new InstantAction(()->robot.climbWinch.setPower(1)),
+                                        new InstantAction(()->robot.climbWinch.setPower(-1)),
                                         new SequentialAction(
                                             new InstantAction(robot::highRung)
                                         )
