@@ -61,7 +61,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(21, -36, Math.toRadians(-45)), 9 * Math.PI/10)
                 .build();
-        Action intake1 = drive.actionBuilder(new Pose2d(20, -35, Math.toRadians(-45)))
+        Action intake1 = drive.actionBuilder(new Pose2d(21, -36, Math.toRadians(-45)))
                 .setReversed(false)
                 .lineToX(27)
                 .build();
@@ -69,17 +69,17 @@ public class HPSideRedV1_1 extends LinearOpMode {
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(5, -27, Math.toRadians(-90)), Math.PI/2)
                 .build();
-        Action intake2 = drive.actionBuilder(new Pose2d(-6, -27, Math.toRadians(-90)))
+        Action intake2 = drive.actionBuilder(new Pose2d(5, -27, Math.toRadians(-90)))
                 .setReversed(false)
                 .setTangent(-4*Math.PI/10)
-                .splineToLinearHeading(new Pose2d(24, -41,  Math.toRadians(-45)), 9*Math.PI/10)
+                .splineToLinearHeading(new Pose2d(25, -42,  Math.toRadians(-45)), 9*Math.PI/10)
                 .build();
         Action deposit2 = drive.actionBuilder(new Pose2d(23, -39, Math.toRadians(-45)))
                 .setTangent(9 * Math.PI/10)
                 .splineToLinearHeading(new Pose2d(0, -27, Math.toRadians(-90)), Math.PI/2)
                 .waitSeconds(0.5)
                 .build();
-        Action intake3 = drive.actionBuilder(new Pose2d(-5, -27, Math.toRadians(-90)))
+        Action intake3 = drive.actionBuilder(new Pose2d(0, -27, Math.toRadians(-90)))
                 .setReversed(false)
                 .setTangent(-4*Math.PI/10)
                 .splineToLinearHeading(new Pose2d(25, -42,  Math.toRadians(-45)), 9*Math.PI/10)
