@@ -99,6 +99,7 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 // PRELOAD DEPOSIT
                                 new ParallelAction(
                                         preloadDrive,
+                                        new InstantAction(()->robot.climbWinch.setPower(1)),
                                         new SequentialAction(
                                             new InstantAction(robot::highRung)
                                         )
@@ -107,8 +108,9 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                 new InstantAction(() -> robot.lift.runToPosition(810)),
                                 new SleepAction(0.1),
                                 new InstantAction(() -> robot.intermediatePreset()),
-//                                // SPIKE RIGHT
+//                               // SPIKE RIGHT
                                 new ParallelAction(
+                                        new InstantAction(()->robot.climbWinch.setPower(0)),
                                         spike1,
                                         robot.retractedIntakePreset(true)
 

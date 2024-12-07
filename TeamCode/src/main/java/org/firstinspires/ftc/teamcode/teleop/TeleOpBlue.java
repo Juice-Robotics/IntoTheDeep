@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.tuning;
+package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,20 +13,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.util.enums.AllianceColor;
-import org.firstinspires.ftc.teamcode.util.enums.ClimbType;
 import org.firstinspires.ftc.teamcode.util.enums.Levels;
 import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name="RED")
+@TeleOp(name="BLUE")
 @Config
-public class TimingTest extends LinearOpMode {
+public class TeleOpBlue extends LinearOpMode {
     double oldTime = 0;
-    AllianceColor allianceColor = AllianceColor.RED;
+    AllianceColor allianceColor = AllianceColor.BLUE;
 
     // STATES
     boolean manualExtension = false;
@@ -48,7 +46,7 @@ public class TimingTest extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Robot robot = new Robot(hardwareMap, false);
         List<Action> actionsQueue = new ArrayList<>();
-
+        robot.toggleGamepieceColor(AllianceColor.BLUE);
         waitForStart();
 //        robot.initSubsystems(true);
         if (isStopRequested()) return;
@@ -66,7 +64,7 @@ public class TimingTest extends LinearOpMode {
                     );
                 } else {
                     actionsQueue.add(
-                            robot.intakeDrop(SampleColors.RED)
+                            robot.intakeDrop(SampleColors.BLUE)
                     );
                 }
             }
