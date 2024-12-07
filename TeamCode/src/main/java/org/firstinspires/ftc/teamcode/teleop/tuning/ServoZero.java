@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(group = "competition")
 @Config
+@Disabled
 public class ServoZero extends LinearOpMode {
     Servo servo;
     Servo servo2;

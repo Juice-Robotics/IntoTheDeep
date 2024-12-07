@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -26,6 +27,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.Motor;
 
 @TeleOp(name="cv tuner")
 @Config
+@Disabled
 public class LocalizationTuner extends LinearOpMode {
     CVMaster cv;
     GoBildaPinpoint odo;

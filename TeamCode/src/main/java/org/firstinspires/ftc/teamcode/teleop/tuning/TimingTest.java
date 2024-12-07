@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name="TimingTest")
+@TeleOp(name="RED")
 @Config
 public class TimingTest extends LinearOpMode {
     double oldTime = 0;
@@ -39,6 +39,8 @@ public class TimingTest extends LinearOpMode {
     boolean oldTriangle = false;
     boolean oldSquare = false;
     boolean oldCircle = false;
+    boolean oldDpadUp = false;
+    boolean oldDpadDown = false;
     double oldTrigger = 0;
     double oldRtrigger = 0.0;
     @Override
@@ -126,6 +128,17 @@ public class TimingTest extends LinearOpMode {
                 }
             }
             oldTrigger = gamepad1.left_trigger;
+
+            if (gamepad1.dpad_up){
+                robot.climbWinch.setPower(1);
+            }
+            else if (gamepad1.dpad_down){
+                robot.climbWinch.setPower(-1);
+            }else{
+                robot.climbWinch.setPower(0);
+            }
+//            oldDpadUp = gamepad1.dpad_up;
+//            oldDpadDown = gamepad1.dpad_down;
 
             List<Action> newActions = new ArrayList<>();
             for (Action action : actionsQueue) {

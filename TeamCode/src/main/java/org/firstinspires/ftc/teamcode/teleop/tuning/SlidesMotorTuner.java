@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 @TeleOp
+@Disabled
 public class SlidesMotorTuner extends OpMode {
     private PIDController controller1;
 

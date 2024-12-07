@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(group = "competition")
 @Config
+@Disabled
 public class MotionProfileTest extends LinearOpMode {
     public static double MAX_VEL = 0;
     public static double MAX_ACCEL = 0;

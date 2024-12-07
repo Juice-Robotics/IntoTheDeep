@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.util.enums.Levels;
 import org.firstinspires.ftc.teamcode.util.enums.SampleColors;
 import org.firstinspires.ftc.teamcode.util.misc.FullPose2d;
 
-@Autonomous(name = "HPSideRedV1.1", group = "Autonomous")
+@Autonomous(name = "SPECIMENAUTO", group = "Autonomous")
 public class HPSideRedV1_1 extends LinearOpMode {
     Robot robot;
     KalmanDrive drive;

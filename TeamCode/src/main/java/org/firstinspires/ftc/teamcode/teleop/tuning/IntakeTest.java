@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(group = "competition")
 @Config
+@Disabled
 public class IntakeTest extends LinearOpMode {
     CRServo servo;
     CRServo servo2;

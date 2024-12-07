@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop.util;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.BrushlandColorSensor;
 
 @TeleOp(group = "competition")
 @Config
+@Disabled
 public class ColorSensorI2C extends LinearOpMode {
     RevColorSensorV3 sensor;
     @Override

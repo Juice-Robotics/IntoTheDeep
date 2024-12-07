@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.Motor;
 
 @TeleOp(name="target test")
 @Config
+@Disabled
 public class TargetingTest extends LinearOpMode {
     CVMaster cv;
     GoBildaPinpointDriverRR odo;

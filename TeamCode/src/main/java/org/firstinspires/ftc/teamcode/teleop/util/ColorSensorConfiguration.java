@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop.util;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 
 @TeleOp
 @Config
+@Disabled
 public class ColorSensorConfiguration extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,7 +29,7 @@ public class ColorSensorConfiguration extends LinearOpMode {
         neither   --> no object
          */
         crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // blue
-        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 55 / 360.0 * 255, 75 / 360.0 * 255); // yellow
+        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 47 / 360.0 * 255, 75 / 360.0 * 255); // yellow
         crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 25); // 5mm or closer requirement
 
         crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 140 / 360.0 * 255, 210 / 360.0 * 255); // inverted red
@@ -35,7 +37,7 @@ public class ColorSensorConfiguration extends LinearOpMode {
         crf.setPin1DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 25); // 5mm or closer requirement
         crf.setPin1InvertHue(); // invert hue values
 
-        crf.setLedBrightness(50);
+        crf.setLedBrightness(35);
 
         waitForStart();
 

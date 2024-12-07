@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop.tuning;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.StepperServo;
 
 @Config
 @TeleOp
+@Disabled
 public class ExtensionTest extends LinearOpMode {
     public static double EXT = 90;
 
