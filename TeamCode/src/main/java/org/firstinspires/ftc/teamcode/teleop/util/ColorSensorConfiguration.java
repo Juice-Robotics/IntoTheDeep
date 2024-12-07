@@ -37,7 +37,7 @@ public class ColorSensorConfiguration extends LinearOpMode {
         crf.setPin1DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 25); // 5mm or closer requirement
         crf.setPin1InvertHue(); // invert hue values
 
-        crf.setLedBrightness(35);
+        crf.setLedBrightness(30);
 
         waitForStart();
 
