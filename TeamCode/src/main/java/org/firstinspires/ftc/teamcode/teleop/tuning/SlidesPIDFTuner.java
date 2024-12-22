@@ -15,12 +15,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 @TeleOp
-@Disabled
+//@Disabled
 public class SlidesPIDFTuner extends OpMode {
     private PIDController controller1;
 
-    public static double p = 0.0, i = 0, d = 0.000;
-    public static double f = 0.000;
+    public double p = 0.02, i = 0.00, d = 0.00045;
+    public double f = 0.125;
 
     public static int target = 0;
     private final double angleSlides = 60;
@@ -57,7 +57,7 @@ public class SlidesPIDFTuner extends OpMode {
         slides1.setPower(-power1);
         slides2.setPower(-power1);
 
-        telemetry.addData("pos1 ", slides1Pos);
+        telemetry.addData("pos1 ", slides1Pos/200);
         telemetry.addData("target ", target);
         telemetry.addData("motor 1 current", slides1.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("motor 2 current", slides2.getCurrent(CurrentUnit.AMPS));

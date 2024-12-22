@@ -6,8 +6,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.subsystems.extension.Extension;
 import org.firstinspires.ftc.teamcode.subsystems.lift.Lift;
 import org.firstinspires.ftc.teamcode.util.hardware.ContinuousServo;
@@ -16,12 +18,15 @@ import org.firstinspires.ftc.teamcode.util.hardware.StepperServo;
 
 @TeleOp(group = "competition")
 @Config
-@Disabled
+//@Disabled
 public class ClimbTest extends LinearOpMode {
     ContinuousServo climb1;
     ContinuousServo climb2;
     Extension ext;
     Lift lift;
+    DcMotorEx slides1;
+    DcMotorEx slides2;
+    public static int REVERSED1 = 1;
 
     public static int LIFT_TARGET = 0;
 
@@ -31,26 +36,43 @@ public class ClimbTest extends LinearOpMode {
         climb1 = new ContinuousServo(0, "climb1", hardwareMap);
         climb2 = new ContinuousServo(0, "climb2", hardwareMap);
         ext = new Extension(new StepperServo(0, "ext1", hardwareMap), new StepperServo(0, "ext2", hardwareMap));
-        lift = new Lift(new Motor(0, "lift1", hardwareMap, false), new Motor(0, "lift2", hardwareMap, false), hardwareMap.voltageSensor.iterator().next());
-
+        //lift = new Lift(new Motor(0, "lift1", hardwareMap, false), new Motor(0, "lift2", hardwareMap, false), hardwareMap.voltageSensor.iterator().next());
+        slides1 = hardwareMap.get(DcMotorEx.class, "lift1");
+        slides2 = hardwareMap.get(DcMotorEx.class, "lift2");
         ext.runToPosition(165);
         // Initialize your own robot class
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
+//            if (gamepad1.triangle) {
+//                climb1.setSpeed((float) -1);
+//                climb2.setSpeed((float) -1);
+//            } else if (gamepad1.cross) {
+//                climb1.setSpeed((float) 1);
+//                climb2.setSpeed((float) 1);
+//            } else {
+//                climb1.setSpeed(0);
+//                climb2.setSpeed(0);
+//            }
             if (gamepad1.triangle) {
-                climb1.setSpeed((float) -1);
-                climb2.setSpeed((float) -1);
+                slides1.setPower((float) REVERSED1*-1);
+                slides2.setPower((float) 1);
             } else if (gamepad1.cross) {
-                climb1.setSpeed((float) 1);
-                climb2.setSpeed((float) 1);
-            } else {
-                climb1.setSpeed(0);
-                climb2.setSpeed(0);
+                slides1.setPower((float) REVERSED1*1);
+                slides2.setPower((float) -1);
+            } else if (gamepad1.circle) {
+                slides1.setPower((float) REVERSED1*0.5);
+                slides2.setPower((float) -0.5);
+            }else {
+                slides1.setPower(0);
+                slides2.setPower(0);
             }
-
-            lift.runToPosition(LIFT_TARGET);
-            lift.update();
+            telemetry.addData("liftCurrentLeft: ", slides1.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("liftCurrentRight: ", slides2.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("listPos: ", slides1.getCurrentPosition());
+            telemetry.update();
+//            lift.runToPosition(LIFT_TARGET);
+//            lift.update();
         }
     }
 }

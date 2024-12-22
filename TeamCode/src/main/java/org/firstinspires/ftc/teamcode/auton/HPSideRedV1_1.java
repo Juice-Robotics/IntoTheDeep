@@ -130,65 +130,65 @@ public class HPSideRedV1_1 extends LinearOpMode {
                                         observation2)
                                 ,
                                 robot.claw.ejectOpsAuton(true),
-                                back
-//                                //cycle1
-//                                new SleepAction(0.5),
-//                                new ParallelAction(
-//                                    new SequentialAction(new SleepAction(1),
-//                                    new InstantAction(()->robot.extension.runToPosition(225))),
-//                                    intake1
-//                                ),
-//                                new SleepAction(0.3),
-//                                new InstantAction(robot::highRung),
-//                                new SleepAction(0.1),
-//                                deposit,
-//                                robot.outtakeSpecimen(true),
-//                                new InstantAction(() -> robot.lift.runToPosition(810)),
-//                                new SleepAction(0.1),
-//                                new InstantAction(() -> robot.intermediatePreset()),
-//
-//                                //cycle2
-//                                new SleepAction(0.5),
-//                                new ParallelAction(
-//                                        intake2,
-//                                        new SequentialAction(
-//                                                robot.retractedIntakePreset(true),
-//                                                new SleepAction(2),
-//                                                new InstantAction(()->robot.extension.runToPosition(225))
-//                                        )
-//                                ),
-//                                new SleepAction(0.3),
-//                                new InstantAction(robot::highRung),
-//                                new SleepAction(0.1),
-//                                deposit2,
-//                                robot.outtakeSpecimen(true),
-//                                new InstantAction(() -> robot.lift.runToPosition(810)),
-//                                new SleepAction(0.1),
-//                                new InstantAction(() -> robot.intermediatePreset()),
-//
-//                                //cycle3
-//                                new SleepAction(0.5),
-//                                new ParallelAction(
-//                                        intake3,
-//                                        new SequentialAction(
-//                                                robot.retractedIntakePreset(true),
-//                                                new SleepAction(2),
-//                                                new InstantAction(()->robot.extension.runToPosition(225))
-//                                        )
-//                                ),
-//                                new SleepAction(0.3),
-//                                new InstantAction(robot::highRung),
-//                                new SleepAction(0.1),
-//                                deposit3,
-//                                robot.outtakeSpecimen(true),
-//                                new InstantAction(() -> robot.lift.runToPosition(810)),
-//                                new SleepAction(0.1),
-//                                new InstantAction(() -> robot.intermediatePreset())
+                                back,
+                                //cycle1
+                                new SleepAction(0.5),
+                                new ParallelAction(
+                                    new SequentialAction(new SleepAction(1),
+                                    new InstantAction(()->robot.extension.runToPosition(225))),
+                                    intake1
+                                ),
+                                new SleepAction(0.3),
+                                new InstantAction(robot::highRung),
+                                new SleepAction(0.1),
+                                deposit,
+                                robot.outtakeSpecimen(true),
+                                new InstantAction(() -> robot.lift.runToPosition(810)),
+                                new SleepAction(0.1),
+                                new InstantAction(() -> robot.intermediatePreset()),
+
+                                //cycle2
+                                new SleepAction(0.5),
+                                new ParallelAction(
+                                        intake2,
+                                        new SequentialAction(
+                                                robot.retractedIntakePreset(true),
+                                                new SleepAction(2),
+                                                new InstantAction(()->robot.extension.runToPosition(225))
+                                        )
+                                ),
+                                new SleepAction(0.3),
+                                new InstantAction(robot::highRung),
+                                new SleepAction(0.1),
+                                deposit2,
+                                robot.outtakeSpecimen(true),
+                                new InstantAction(() -> robot.lift.runToPosition(810)),
+                                new SleepAction(0.1),
+                                new InstantAction(() -> robot.intermediatePreset()),
+
+                                //cycle3
+                                new SleepAction(0.5),
+                                new ParallelAction(
+                                        intake3,
+                                        new SequentialAction(
+                                                robot.retractedIntakePreset(true),
+                                                new SleepAction(2),
+                                                new InstantAction(()->robot.extension.runToPosition(225))
+                                        )
+                                ),
+                                new SleepAction(0.3),
+                                new InstantAction(robot::highRung),
+                                new SleepAction(0.1),
+                                deposit3,
+                                robot.outtakeSpecimen(true),
+                                new InstantAction(() -> robot.lift.runToPosition(810)),
+                                new SleepAction(0.1),
+                                new InstantAction(() -> robot.intermediatePreset())
 
                         ),
                         new LoopAction(() -> {
                             robot.lift.update();
-//                            PoseKeeper.set(robot.drive.pose);
+//                             PoseKeeper.set(robot.drive.pose);
                         }, this::isStopRequested)
                 )
         );
