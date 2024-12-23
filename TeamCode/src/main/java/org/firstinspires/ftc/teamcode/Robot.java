@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.commands.CommandMaster;
 import org.firstinspires.ftc.teamcode.roadrunner.KalmanDrive;
@@ -61,6 +62,7 @@ public class Robot {
     public CommandMaster commands;
     public HardwareMap hardwareMap;
 
+
     // STATE VARS
     boolean auton;
     boolean intaking = false;
@@ -70,7 +72,7 @@ public class Robot {
     public Gamepiece mode = Gamepiece.SAMPLE;
     public SampleColors targetColor = SampleColors.YELLOW;
     public ClimbType climbMode = ClimbType.LEVEL_3;
-
+    public GoBildaPinpoint pinpoint;
     Motor backLeft;
     Motor backRight;
     Motor frontLeft;
@@ -132,6 +134,16 @@ public class Robot {
         backRight = (Motor) components[1];
         frontLeft = (Motor) components[2];
         frontRight = (Motor) components[3];
+    }
+    public void updatePinpoint(){
+        pinpoint.update();
+    }
+    public void initPinpoint(){
+        pinpoint = hardwareMap.get(GoBildaPinpoint.class, "pinpoint");
+        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
+        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
+        pinpoint.resetPosAndIMU();
     }
 
     public Action initSubsystems(boolean action){
@@ -669,10 +681,10 @@ public class Robot {
             powerBackRight /= max;
         }
 
-        frontLeft.setSpeed((float)powerFrontLeft);
-        frontRight.setSpeed((float)powerFrontRight);
-        backLeft.setSpeed(-(float)powerBackLeft);
-        backRight.setSpeed(-(float)powerBackRight);
+        frontLeft.setSpeed((float) powerFrontLeft);
+        frontRight.setSpeed((float) powerFrontRight);
+        backLeft.setSpeed(-(float) powerBackLeft);
+        backRight.setSpeed(-(float) powerBackRight);
     }
 
     public void sleep(int millis) {

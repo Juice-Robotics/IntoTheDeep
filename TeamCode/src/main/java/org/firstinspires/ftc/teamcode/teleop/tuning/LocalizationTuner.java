@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.Motor;
 
 @TeleOp(name="cv tuner")
 @Config
-@Disabled
+//Disabled
 public class LocalizationTuner extends LinearOpMode {
     CVMaster cv;
     GoBildaPinpoint odo;
@@ -38,8 +38,8 @@ public class LocalizationTuner extends LinearOpMode {
     Motor frontLeft;
     Motor frontRight;
 
-    public static double odoXOffset = -43.18;
-    public static double odoYOffset = -22.225;
+    public static double odoXOffset = 0;
+    public static double odoYOffset = 25.4*5.13217677165;;
     public static double otosXOffset = 0;
     public static double otosYOffset =  6.625; //6.625
     public static double otosHeadingOffset = Math.toRadians(90);
@@ -48,16 +48,16 @@ public class LocalizationTuner extends LinearOpMode {
     public static double Kotos = 0.25;
     public static double Kll = 0.5;
 
-    public double startingX = 63.75;
-    public double startingY = 54.25;
+    public double startingX = 0;
+    public double startingY = 0;
     public double startingHeading = Math.toRadians(0);
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        cv = new CVMaster(hardwareMap.get(Limelight3A.class, "limelight"), hardwareMap.get(WebcamName.class, "Webcam 1"));
+        cv = new CVMaster(hardwareMap.get(Limelight3A.class, "limelight"), null);
         odo = hardwareMap.get(GoBildaPinpoint.class,"pinpoint");
-        otos = hardwareMap.get(SparkFunOTOS.class, "otos");
+        //otos = hardwareMap.get(SparkFunOTOS.class, "otos");
         //KalmanFilter kalman = new KalmanFilter(new com.arcrobotics.ftclib.geometry.Pose2d(startingX, startingY, new Rotation2d(startingHeading)), odo, cv.limelight);
 
         cv.start();
@@ -66,24 +66,24 @@ public class LocalizationTuner extends LinearOpMode {
 //        odo.resetPosAndIMU();
         odo.setOffsets(odoXOffset, odoYOffset);
         odo.recalibrateIMU();
-        odo.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        odo.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         odo.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
         odo.setPosition(new Pose2D(DistanceUnit.INCH, startingX, startingY, AngleUnit.RADIANS, startingHeading));
 
-        otos.setLinearUnit(DistanceUnit.INCH);
-        otos.setAngularUnit(AngleUnit.RADIANS);
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(otosXOffset, otosYOffset, otosHeadingOffset);
-        otos.setOffset(offset);
-        otos.setLinearScalar(1.0);
-        otos.setAngularScalar(1.0);
-        otos.calibrateImu();
-        otos.resetTracking();
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(startingX, startingY, startingHeading);
-        otos.setPosition(currentPosition);
-        // Get the hardware and firmware version
-        SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();
-        SparkFunOTOS.Version fwVersion = new SparkFunOTOS.Version();
-        otos.getVersionInfo(hwVersion, fwVersion);
+//        otos.setLinearUnit(DistanceUnit.INCH);
+//        otos.setAngularUnit(AngleUnit.RADIANS);
+//        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(otosXOffset, otosYOffset, otosHeadingOffset);
+//        otos.setOffset(offset);
+//        otos.setLinearScalar(1.0);
+//        otos.setAngularScalar(1.0);
+//        otos.calibrateImu();
+//        otos.resetTracking();
+//        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(startingX, startingY, startingHeading);
+//        otos.setPosition(currentPosition);
+//        // Get the hardware and firmware version
+//        SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();
+//        SparkFunOTOS.Version fwVersion = new SparkFunOTOS.Version();
+//        otos.getVersionInfo(hwVersion, fwVersion);
 
         backLeft = new Motor(3, "leftBack", hardwareMap, true);
         backRight = new Motor(3, "rightBack", hardwareMap, false);
@@ -96,8 +96,8 @@ public class LocalizationTuner extends LinearOpMode {
             odo.update();
             Pose2D pos = odo.getPosition();
             Pose2d ppPose = new Pose2d(pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.RADIANS));
-            SparkFunOTOS.Pose2D otosPos = otos.getPosition();
-            Pose2d otosPose = new Pose2d(otosPos.x, otosPos.y, otosPos.h);
+            //SparkFunOTOS.Pose2D otosPos = otos.getPosition();
+            //Pose2d otosPose = new Pose2d(otosPos.x, otosPos.y, otosPos.h);
             LLResult result = cv.mt2RelocalizeRAW(pos.getHeading(AngleUnit.RADIANS));
             Pose3D pose3d = null;
             Pose2d llPose = null;
@@ -120,8 +120,8 @@ public class LocalizationTuner extends LinearOpMode {
             Canvas c = packet.fieldOverlay();
             if (llPose != null) {
 
-                fusedX = ((Kpp) * ppPose.position.x) + ((Kotos) * otosPose.position.x) + (Kll * llPose.position.x);
-                fusedY = ((Kpp) * ppPose.position.y) + ((Kotos) * otosPose.position.y) + (Kll * llPose.position.y);
+//                fusedX = ((Kpp) * ppPose.position.x) + ((Kotos) * otosPose.position.x) + (Kll * llPose.position.x);
+//                fusedY = ((Kpp) * ppPose.position.y) + ((Kotos) * otosPose.position.y) + (Kll * llPose.position.y);
 
                 c.setStroke("#34ad38");
                 Drawing.drawRobot(c, llPose);
@@ -139,8 +139,8 @@ public class LocalizationTuner extends LinearOpMode {
             c.setStroke("#edd100");
             Drawing.drawRobot(c, ppPose);
 
-            c.setStroke("#d90209");
-            Drawing.drawRobot(c, otosPose);
+//            c.setStroke("#d90209");
+//            Drawing.drawRobot(c, otosPose);
 
             c.setStroke("#fc8c03");
             Drawing.drawRobot(c, fusedPose);
@@ -148,27 +148,29 @@ public class LocalizationTuner extends LinearOpMode {
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
 //            telemetry.addData("pose", pose);
-            double otosError = Math.sqrt((Math.pow((ppPose.position.x - otosPose.position.x), 2) + Math.pow((ppPose.position.y - otosPose.position.y), 2)));
-            telemetry.addData("otosError", otosError);
+            //double otosError = Math.sqrt((Math.pow((ppPose.position.x - otosPose.position.x), 2) + Math.pow((ppPose.position.y - otosPose.position.y), 2)));
+            //telemetry.addData("otosError", otosError);
             telemetry.addData("px", pos.getX(DistanceUnit.INCH));
             telemetry.addData("py", pos.getY(DistanceUnit.INCH));
+            telemetry.addData("podox", odo.getPosition().getX(DistanceUnit.INCH));
+            telemetry.addData("podoy", odo.getPosition().getY(DistanceUnit.INCH));
             telemetry.addData("pheading", pos.getHeading(AngleUnit.RADIANS));
 
 //            telemetry.addData("looptime: ", frequency);
             telemetry.update();
 
-            double x,y,rx;
-            if (gamepad1.right_trigger > 0.5) {
-                x = -gamepad1.left_stick_x * (1 - 0.66 * gamepad1.right_trigger);
-                y = -gamepad1.left_stick_y * (1 - 0.66 * gamepad1.right_trigger);
-                rx = gamepad1.right_stick_x * (1 - 0.66 * gamepad1.right_trigger);
-
-            } else {
-                x = -gamepad1.left_stick_x;
-                y = -gamepad1.left_stick_y;
-                rx = gamepad1.right_stick_x;
-            }
-            setDrivePower(-x, y, rx);
+//            double x,y,rx;
+//            if (gamepad1.right_trigger > 0.5) {
+//                x = -gamepad1.left_stick_x * (1 - 0.66 * gamepad1.right_trigger);
+//                y = -gamepad1.left_stick_y * (1 - 0.66 * gamepad1.right_trigger);
+//                rx = gamepad1.right_stick_x * (1 - 0.66 * gamepad1.right_trigger);
+//
+//            } else {
+//                x = -gamepad1.left_stick_x;
+//                y = -gamepad1.left_stick_y;
+//                rx = gamepad1.right_stick_x;
+//            }
+//            setDrivePower(-x, y, rx);
 
         }
     }

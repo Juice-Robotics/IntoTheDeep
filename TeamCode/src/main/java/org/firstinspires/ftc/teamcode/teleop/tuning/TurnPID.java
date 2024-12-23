@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 
 @Config
 @TeleOp
-@Disabled
+//@Disabled
 public class TurnPID extends OpMode {
     private PIDController controller1;
 
@@ -54,16 +54,23 @@ public class TurnPID extends OpMode {
     public void loop(){
         controller1.setPID(p, i, d);
         pinpoint.update();
-        double pos = pinpoint.getPosition().getHeading(AngleUnit.RADIANS);
+        double pos = normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         telemetry.addData("pos ", pos);
-        double power1 = controller1.calculate(pos, Math.toRadians(target));
+        double power1 = controller1.calculate(pos, target);
 
         leftFront.setPower(-power1);
         leftBack.setPower(-power1);
         rightFront.setPower(power1);
         rightBack.setPower(power1);
+        telemetry.addData("pow: ", power1);
 
-        telemetry.addData("target ", Math.toRadians(target));
+        telemetry.addData("target ", target);
         telemetry.update();
+    }
+    public double normalizeH(double heading){
+        if (heading < 0){
+            return heading + 2*Math.PI;
+        }
+        return heading;
     }
 }
