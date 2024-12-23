@@ -445,8 +445,13 @@ public class Robot {
             timerStarted = false;
             return true;
         } else if (r == 1 && timerStarted && colorTimeout.time() > 0.000) {
-                stopIntake();
-                return false;
+            while (colorTimeout.time() < 0.1){
+                if (claw.smartStopDetect() != 1){
+                    return true;
+                }
+            }
+            stopIntake();
+            return false;
         } else if (r == -1 && timerStarted && colorTimeout.time() > 0.000) {
                 claw.ejectOps();
                 return true;
