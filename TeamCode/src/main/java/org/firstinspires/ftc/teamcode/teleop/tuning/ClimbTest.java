@@ -44,16 +44,16 @@ public class ClimbTest extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
-//            if (gamepad1.triangle) {
-//                climb1.setSpeed((float) -1);
-//                climb2.setSpeed((float) -1);
-//            } else if (gamepad1.cross) {
-//                climb1.setSpeed((float) 1);
-//                climb2.setSpeed((float) 1);
-//            } else {
-//                climb1.setSpeed(0);
-//                climb2.setSpeed(0);
-//            }
+            if (gamepad1.dpad_up) {
+                climb1.setSpeed((float) -1);
+                climb2.setSpeed((float) -1);
+            } else if (gamepad1.dpad_down) {
+                climb1.setSpeed((float) 1);
+                climb2.setSpeed((float) 1);
+            } else {
+                climb1.setSpeed(0);
+                climb2.setSpeed(0);
+            }
             if (gamepad1.triangle) {
                 slides1.setPower((float) REVERSED1*-1);
                 slides2.setPower((float) 1);

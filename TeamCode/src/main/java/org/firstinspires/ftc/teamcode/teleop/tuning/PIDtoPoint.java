@@ -41,6 +41,7 @@ public class PIDtoPoint extends OpMode {
     private DcMotorEx rightBack;
     private GoBildaPinpoint pinpoint;
     //public Robot robot;
+    double oldTime = 0;
 
     @Override
     public void init() {
@@ -89,6 +90,10 @@ public class PIDtoPoint extends OpMode {
         double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
         Vector2d r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         setDrivePower(r.x, r.y, heading);
+        double newTime = getRuntime();
+        double loopTime = newTime-oldTime;
+        double frequency = 1/loopTime;
+        oldTime = newTime;
         telemetry.addData("forward ", forward);
         telemetry.addData("strafe ", strafe);
         telemetry.addData("heading ", heading);
@@ -98,6 +103,7 @@ public class PIDtoPoint extends OpMode {
         telemetry.addData("forwardTarget ", targetF);
         telemetry.addData("strafeTarget ", targetS);
         telemetry.addData("headingTarget ", targetH);
+        telemetry.addData("LOOPTIME: ", frequency);
         telemetry.update();
         lastHeading = pinpoint.getHeading();
     }
