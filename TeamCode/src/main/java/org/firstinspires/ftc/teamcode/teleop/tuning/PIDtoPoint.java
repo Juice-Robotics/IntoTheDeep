@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,13 +21,13 @@ import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 @TeleOp
 //@Disabled
 public class PIDtoPoint extends OpMode {
-    private PIDController controllerForward;
-    private PIDController controllerStrafe;
+    private PIDFController controllerForward;
+    private PIDFController controllerStrafe;
     private PIDController controllerHeading;
 
-    public static double pF = 0.09, iF = 0, dF = 0.01;
-    public static double pS = -0.1, iS = -0.12, dS = -0.002;
-    public static double pH = -0.7, iH = 0, dH = 0.000;
+    public static double pF = 0.09, iF = 0, dF = 0.01, fF = 0;
+    public static double pS = -0.1, iS = -0.12, dS = -0.002, fS = 0;;
+    public static double pH = -0.7, iH = 0, dH = 0.000;;
 
     public static double targetF = 0;
     public static double targetS = 0;
@@ -43,8 +44,8 @@ public class PIDtoPoint extends OpMode {
 
     @Override
     public void init() {
-        controllerForward = new PIDController(pF, iF , dF);
-        controllerStrafe = new PIDController(pS, iS , dS);
+        controllerForward = new PIDFController(pF, iF , dF, fF);
+        controllerStrafe = new PIDFController(pS, iS , dS, fS);
         controllerHeading = new PIDController(pH, iH , dH);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
@@ -67,8 +68,8 @@ public class PIDtoPoint extends OpMode {
     }
     @Override
     public void loop(){
-        controllerForward.setPID(pF, iF , dF);
-        controllerStrafe.setPID(pS, iS , dS);
+        controllerForward.setPIDF(pF, iF , dF, fF);
+        controllerStrafe.setPIDF(pS, iS , dS, fS);
         controllerHeading.setPID(pH, iH , dH);
         //robot.updatePinpoint();
         pinpoint.update();
@@ -86,7 +87,7 @@ public class PIDtoPoint extends OpMode {
         double forward = controllerForward.calculate(pinpoint.getPosition().getX(DistanceUnit.INCH), targetF);
         double strafe = controllerStrafe.calculate(pinpoint.getPosition().getY(DistanceUnit.INCH), targetS);
         double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
-        Vector2d r = rotateVector(new Vector2d(strafe, forward), -heading);
+        Vector2d r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         setDrivePower(r.x, r.y, heading);
         telemetry.addData("forward ", forward);
         telemetry.addData("strafe ", strafe);
