@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.zestyzoom;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
@@ -7,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
@@ -18,13 +21,15 @@ public class Drive {
     private PIDFController controllerStrafe;
     private PIDController controllerHeading;
 
-    public static double pF = 0.09, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.1, iS = -0.12, dS = -0.002, fS = 0;;
+    public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
+    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;;
     public static double pH = -0.7, iH = 0, dH = 0.000;;
 
     public static double targetF = 0;
     public static double targetS = 0;
     public static double targetH = 0;
+    public static double e = 3;
+    public static double eh = 20;
 
     public Pose2D pose;
 
@@ -35,11 +40,14 @@ public class Drive {
     private DcMotorEx leftBack;
     private DcMotorEx rightBack;
     private GoBildaPinpoint pinpoint;
+    public Telemetry telemetry;
 
-    public Drive(HardwareMap hardwareMap, Pose2D startingPose) {
+    public Drive(HardwareMap hardwareMap, Pose2D startingPose, Telemetry telemetry) {
         controllerForward = new PIDFController(pF, iF , dF, fF);
         controllerStrafe = new PIDFController(pS, iS , dS, fS);
         controllerHeading = new PIDController(pH, iH , dH);
+
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
@@ -54,7 +62,12 @@ public class Drive {
         pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
-        pinpoint.setPosition(startingPose);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, startingPose.getY(DistanceUnit.INCH), startingPose.getX(DistanceUnit.INCH), AngleUnit.RADIANS, startingPose.getHeading(AngleUnit.RADIANS)));
         targetS = startingPose.getX(DistanceUnit.INCH);
         targetF = startingPose.getY(DistanceUnit.INCH);
         targetH = startingPose.getHeading(AngleUnit.RADIANS);
@@ -69,6 +82,21 @@ public class Drive {
         double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
         Vector2d r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         setDrivePower(r.x, r.y, heading);
+
+        telemetry.addData("X ", pinpoint.getPosition().getY(DistanceUnit.INCH));
+        telemetry.addData("Y ", pinpoint.getPosition().getX(DistanceUnit.INCH));
+        telemetry.addData("H ", normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading));
+        telemetry.addData("forward ", forward);
+        telemetry.addData("strafe ", strafe);
+        telemetry.addData("heading ", heading);
+        telemetry.addData("rforward ", r.y);
+        telemetry.addData("rstrafe ", r.x);
+
+        telemetry.addData("forwardTarget ", targetF);
+        telemetry.addData("strafeTarget ", targetS);
+        telemetry.addData("headingTarget ", targetH);
+        telemetry.update();
+        lastHeading = pinpoint.getHeading();
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2D startingPose) {
@@ -82,12 +110,14 @@ public class Drive {
     }
 
     public boolean isCloseTo(Pose2D currentPose, Pose2D targetPose) {
-        return Math.abs(currentPose.getX(DistanceUnit.INCH) - targetPose.getX(DistanceUnit.INCH)) < 0.2 && Math.abs(currentPose.getY(DistanceUnit.INCH) - targetPose.getY(DistanceUnit.INCH)) < 0.2 && Math.abs(currentPose.getHeading(AngleUnit.DEGREES) - targetPose.getHeading(AngleUnit.DEGREES)) < 2;
+        return Math.abs(currentPose.getX(DistanceUnit.INCH) - targetPose.getX(DistanceUnit.INCH)) < e && Math.abs(currentPose.getY(DistanceUnit.INCH) - targetPose.getY(DistanceUnit.INCH)) < e && Math.abs(currentPose.getHeading(AngleUnit.DEGREES) - targetPose.getHeading(AngleUnit.DEGREES)) < eh;
     }
 
     private double normalizeH(double heading, double lastHeading){
         if ((heading < 0) && (lastHeading > 1)){
             return heading + 2*Math.PI;
+        }else if ((heading > 0) && (lastHeading < -1)){
+            return heading - 2*Math.PI;
         }
         return heading;
     }
