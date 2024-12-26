@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -24,10 +25,11 @@ public class PIDtoPoint extends OpMode {
     private PIDFController controllerForward;
     private PIDFController controllerStrafe;
     private PIDController controllerHeading;
+    public VoltageSensor voltageSensor;
 
     public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;;
-    public static double pH = -0.7, iH = 0, dH = 0.000;;;
+    public static double pS = -0.033, iS = -0.12, dS = -0.002, fS = 0;;
+    public static double pH = -0.73, iH = 0, dH = 0.000;
 
     public static double targetF = 0;
     public static double targetS = 0;
@@ -42,6 +44,7 @@ public class PIDtoPoint extends OpMode {
     private GoBildaPinpoint pinpoint;
     //public Robot robot;
     double oldTime = 0;
+    double voltageCompensation;
 
     @Override
     public void init() {
@@ -54,17 +57,18 @@ public class PIDtoPoint extends OpMode {
         leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
         rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
         pinpoint = hardwareMap.get(GoBildaPinpoint.class, "pinpoint");
+        voltageSensor = hardwareMap.voltageSensor.iterator().next();
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         // RR localizer note: don't love this conversion (change driver?)
-//        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
-//        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-//        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
-//        pinpoint.resetPosAndIMU();
-        pinpoint.setOffsets(DistanceUnit.MM.fromInches(-3), DistanceUnit.MM.fromInches(0.5));
-        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
+        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
+        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
+//        pinpoint.setOffsets(DistanceUnit.MM.fromInches(-3), DistanceUnit.MM.fromInches(0.5));
+//        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+//        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
+//        pinpoint.resetPosAndIMU();
 
     }
     @Override
@@ -74,6 +78,7 @@ public class PIDtoPoint extends OpMode {
         controllerHeading.setPID(pH, iH , dH);
         //robot.updatePinpoint();
         pinpoint.update();
+        voltageCompensation = 13.5 / voltageSensor.getVoltage();
 //        telemetry.addData("X ", robot.pinpoint.getPosition().getY(DistanceUnit.INCH));
 //        telemetry.addData("Y ", robot.pinpoint.getPosition().getX(DistanceUnit.INCH));
 //        telemetry.addData("H ", robot.pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
@@ -89,7 +94,7 @@ public class PIDtoPoint extends OpMode {
         double strafe = controllerStrafe.calculate(pinpoint.getPosition().getY(DistanceUnit.INCH), targetS);
         double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
         Vector2d r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
-        setDrivePower(r.x, r.y, heading);
+        setDrivePower(r.x * voltageCompensation, r.y* voltageCompensation, heading* voltageCompensation);
         double newTime = getRuntime();
         double loopTime = newTime-oldTime;
         double frequency = 1/loopTime;

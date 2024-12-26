@@ -22,8 +22,8 @@ public class Drive {
     private PIDController controllerHeading;
 
     public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;;
-    public static double pH = -0.7, iH = 0, dH = 0.000;;
+    public static double pS = -0.033, iS = -0.12, dS = -0.002, fS = 0;;
+    public static double pH = -0.73, iH = 0, dH = 0.000;
 
     public static double targetF = 0;
     public static double targetS = 0;
@@ -58,9 +58,9 @@ public class Drive {
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pinpoint.setOffsets(DistanceUnit.MM.fromInches(-3), DistanceUnit.MM.fromInches(0.5));
-        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
+        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
+        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
         try {
             Thread.sleep(1000);

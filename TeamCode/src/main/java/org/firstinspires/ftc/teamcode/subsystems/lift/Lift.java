@@ -62,7 +62,7 @@ public class Lift {
 //        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
         double ff = f;
 
-        voltageCompensation = 13.2 / voltageSensor.getVoltage();
+        voltageCompensation = 13.5 / voltageSensor.getVoltage();
         power1 = (pid1 + ff) * voltageCompensation;
 //        power2 = pid2 + ff;
 
