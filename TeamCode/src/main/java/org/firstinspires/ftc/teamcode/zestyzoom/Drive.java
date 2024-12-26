@@ -28,8 +28,8 @@ public class Drive {
     public static double targetF = 0;
     public static double targetS = 0;
     public static double targetH = 0;
-    public static double e = 3;
-    public static double eh = 20;
+    public static double e = 2;
+    public static double eh = 3;
 
     public Pose2D pose;
 
@@ -77,30 +77,35 @@ public class Drive {
 
     public void update() {
         pinpoint.update();
-        double forward = controllerForward.calculate(pinpoint.getPosition().getX(DistanceUnit.INCH), targetF);
-        double strafe = controllerStrafe.calculate(pinpoint.getPosition().getY(DistanceUnit.INCH), targetS);
-        double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
+        pose = new Pose2D(DistanceUnit.INCH, pinpoint.getPosition().getY(DistanceUnit.INCH), pinpoint.getPosition().getX(DistanceUnit.INCH), AngleUnit.RADIANS, normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading));
+        double forward = controllerForward.calculate(pose.getY(DistanceUnit.INCH), targetF);
+        double strafe = controllerStrafe.calculate(pose.getX(DistanceUnit.INCH), targetS);
+        double heading = controllerHeading.calculate(normalizeH(pinpoint.getHeading(), lastHeading), targetH);
         Vector2d r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         setDrivePower(r.x, r.y, heading);
 
-        telemetry.addData("X ", pinpoint.getPosition().getY(DistanceUnit.INCH));
-        telemetry.addData("Y ", pinpoint.getPosition().getX(DistanceUnit.INCH));
-        telemetry.addData("H ", normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading));
-        telemetry.addData("forward ", forward);
-        telemetry.addData("strafe ", strafe);
-        telemetry.addData("heading ", heading);
-        telemetry.addData("rforward ", r.y);
-        telemetry.addData("rstrafe ", r.x);
+        telemetry.addData("X ", pose.getY(DistanceUnit.INCH));
+        telemetry.addData("Y ", pose.getX(DistanceUnit.INCH));
+        telemetry.addData("H ", normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading));
+//        telemetry.addData("forward ", forward);
+//        telemetry.addData("strafe ", strafe);
+//        telemetry.addData("heading ", heading);
+//        telemetry.addData("rforward ", r.y);
+//        telemetry.addData("rstrafe ", r.x);
 
         telemetry.addData("forwardTarget ", targetF);
         telemetry.addData("strafeTarget ", targetS);
         telemetry.addData("headingTarget ", targetH);
+        telemetry.addData("FError ", pose.getY(DistanceUnit.INCH) - targetF);
+        telemetry.addData("SError ", pose.getX(DistanceUnit.INCH)-targetS);
+        telemetry.addData("HError ", normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading)-targetH);
         telemetry.update();
         lastHeading = pinpoint.getHeading();
+
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2D startingPose) {
-        return new TrajectoryBuilder(this, startingPose);
+        return new TrajectoryBuilder(this, startingPose, telemetry);
     }
 
     public void setTarget(Pose2D pose) {

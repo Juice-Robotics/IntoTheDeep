@@ -25,9 +25,9 @@ public class PIDtoPoint extends OpMode {
     private PIDFController controllerStrafe;
     private PIDController controllerHeading;
 
-    public static double pF = 0.09, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.1, iS = -0.12, dS = -0.002, fS = 0;;
-    public static double pH = -0.7, iH = 0, dH = 0.000;;
+    public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
+    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;;
+    public static double pH = -0.7, iH = 0, dH = 0.000;;;
 
     public static double targetF = 0;
     public static double targetS = 0;

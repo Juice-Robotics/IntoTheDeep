@@ -22,7 +22,7 @@ public class TrajectoryCommand implements Command {
             return true;
         } else {
             queue = dropFirstElement(queue);
-            return queue[0].run();
+            return true;
         }
     }
 

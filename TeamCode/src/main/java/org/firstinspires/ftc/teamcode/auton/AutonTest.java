@@ -38,64 +38,59 @@ import org.firstinspires.ftc.teamcode.zestyzoom.trajectory.TrajectoryCommand;
 @Autonomous(name = "a", group = "Autonomous")
 public class AutonTest extends LinearOpMode {
     public void runOpMode() {
-        Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, Math.PI);
+        //Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, Math.PI);
+        Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, 0);
         Drive drive = new Drive(hardwareMap, beginPose, telemetry);
 
         TrajectoryCommand preloadDrive = drive.trajectoryBuilder(drive.pose)
-                .addPoint(new Pose2D(DistanceUnit.INCH, 0, -28, AngleUnit.RADIANS, Math.PI))
-                .waitSeconds(0.5)
+                //.addPoint(new Pose2D(DistanceUnit.INCH, 0, -29, AngleUnit.RADIANS, Math.PI))
+                .addPoint(new Pose2D(DistanceUnit.INCH, 0, -40, AngleUnit.RADIANS, 0))
+                .waitSeconds(1)
                 .build();
         TrajectoryCommand spike1 = drive.trajectoryBuilder(preloadDrive.endPose())
-                .addPoint(new Pose2D(DistanceUnit.INCH,-38, -43, AngleUnit.RADIANS, Math.toRadians(23)))
-                .waitSeconds(0.5)
+                .addPoint(new Pose2D(DistanceUnit.INCH,-38, -43, AngleUnit.RADIANS, Math.toRadians(-23)))
+                .waitSeconds(1)
                 .build();
-//        TrajectoryCommand observation1 = drive.trajectoryBuilder(spike1.endPose())
-//                .addPoint(new Pose2D(DistanceUnit.INCH,35, -44.5, AngleUnit.RADIANS, Math.toRadians(-55)))
-//                .waitSeconds(0.5)
-//                .build();
-//        TrajectoryCommand spike2 = drive.trajectoryBuilder(observation1.endPose())
-//                .addPoint(new Pose2D(DistanceUnit.INCH,35, -44.5, AngleUnit.RADIANS, Math.toRadians(-55)))
-//                .waitSeconds(0.5)
-//                .build();
-//
-//        TrajectoryCommand spike2 = drive.actionBuilder(new Pose2d(35, -44.5, Math.toRadians(-55)))
-//                .splineToLinearHeading(new Pose2d(51.5, -42, Math.toRadians(80)), Math.toRadians(70))
-//                .build();
-//        TrajectoryCommand observation2 = drive.actionBuilder(new Pose2d(51.5, -42, Math.toRadians(80)))
-//                .splineToLinearHeading(new Pose2d(38, -44.5, Math.toRadians(-60)), Math.toRadians(0))
-//                .build();
-//        Action back = drive.actionBuilder(new Pose2d(38, -44.5, Math.toRadians(-60)))
-//                .setReversed(true)
-//                .setTangent(9 * Math.PI/10)
-//                .splineToLinearHeading(new Pose2d(21, -36, Math.toRadians(-45)), 9 * Math.PI/10)
-//                .build();
-//        Action intake1 = drive.actionBuilder(new Pose2d(21, -36, Math.toRadians(-45)))
-//                .setReversed(false)
-//                .lineToX(27)
-//                .build();
-//        Action deposit = drive.actionBuilder(new Pose2d(22, -37, Math.toRadians(-45)))
-//                .setTangent(9 * Math.PI/10)
-//                .splineToLinearHeading(new Pose2d(5, -27, Math.toRadians(-90)), Math.PI/2)
-//                .build();
-//        Action intake2 = drive.actionBuilder(new Pose2d(5, -27, Math.toRadians(-90)))
-//                .setReversed(false)
-//                .setTangent(-4*Math.PI/10)
-//                .splineToLinearHeading(new Pose2d(25, -42,  Math.toRadians(-45)), 9*Math.PI/10)
-//                .build();
-//        Action deposit2 = drive.actionBuilder(new Pose2d(23, -39, Math.toRadians(-45)))
-//                .setTangent(9 * Math.PI/10)
-//                .splineToLinearHeading(new Pose2d(0, -27, Math.toRadians(-90)), Math.PI/2)
-//                .waitSeconds(0.5)
-//                .build();
-//        Action intake3 = drive.actionBuilder(new Pose2d(0, -27, Math.toRadians(-90)))
-//                .setReversed(false)
-//                .setTangent(-4*Math.PI/10)
-//                .splineToLinearHeading(new Pose2d(25, -42,  Math.toRadians(-45)), 9*Math.PI/10)
-//                .build();
-//        Action deposit3 = drive.actionBuilder(new Pose2d(23, -39, Math.toRadians(-45)))
-//                .setTangent(9 * Math.PI/10)
-//                .splineToLinearHeading(new Pose2d(3, -27.5, Math.toRadians(-90)), Math.PI/2)
-//                .build();
+        TrajectoryCommand observation1 = drive.trajectoryBuilder(spike1.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH,-35, -44.5, AngleUnit.RADIANS, Math.toRadians(-145)))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand spike2 = drive.trajectoryBuilder(observation1.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH,-45.2, -42, AngleUnit.RADIANS, Math.toRadians(-10)))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand observation2 = drive.trajectoryBuilder(spike2.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, -38, -44.5, AngleUnit.RADIANS, Math.toRadians(-150)))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand back = drive.trajectoryBuilder(observation2.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, -21, -38, AngleUnit.RADIANS, Math.toRadians(-135)))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand intake1 = drive.trajectoryBuilder(back.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, -27, -43, AngleUnit.RADIANS, Math.toRadians(-135)))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand deposit = drive.trajectoryBuilder(intake1.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, -5, -29, AngleUnit.RADIANS, Math.PI))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand intake2 = drive.trajectoryBuilder(deposit.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, -25, -44,  AngleUnit.RADIANS, Math.toRadians(-135)))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand deposit2 = drive.trajectoryBuilder(intake2.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, 0, -29, AngleUnit.RADIANS, Math.PI))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand intake3 = drive.trajectoryBuilder(deposit2.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, -25, -44,  AngleUnit.RADIANS, Math.toRadians(-135)))
+                .waitSeconds(1)
+                .build();
+        TrajectoryCommand deposit3 = drive.trajectoryBuilder(intake3.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, -3, -29, AngleUnit.RADIANS, Math.PI))
+                .waitSeconds(1)
+                .build();
         telemetry.addData("Status","starting");
         telemetry.update();
 //        robot.initSubsystems();
@@ -104,28 +99,39 @@ public class AutonTest extends LinearOpMode {
         //                            robot.lift.update();
         //                             PoseKeeper.set(robot.drive.pose);
         Commands.runBlocking(
-                new ParallelCommand(
-                        new SequentialCommand(
-                            // PRELOAD DEPOSIT
-
-                            new ParallelCommand(
-                                    preloadDrive
-//                                        new InstantCommand(()->robot.climbWinch.setPower(1)),
-//                                        new SequentialAction(
-//                                                new InstantAction(robot::highRung)
-//                                        )
-                            ),
-//                                new InstantAction(()->robot.climbWinch.setPower(0)),
-//                                robot.outtakeSpecimen(true),
-//                                new InstantAction(() -> robot.lift.runToPosition(810)),
-                            //new SleepCommand(0.1),
-//                                new InstantAction(() -> robot.intermediatePreset()),
-//                               // SPIKE RIGHT
-                            new ParallelCommand(
-                                    spike1
-                                    //robot.retractedIntakePreset(true)
-
-                            )
+            new ParallelCommand(
+                new SequentialCommand(
+                    // PRELOAD DEPOSIT
+                    preloadDrive,
+                    spike1,
+                    observation1,
+                    spike2,
+                    observation2,
+                    back,
+                    intake1,
+                    deposit,
+                    intake2,
+                    deposit2,
+                    intake3,
+                    deposit3
+//                        new ParallelCommand(
+//                                preloadDrive
+////                                        new InstantCommand(()->robot.climbWinch.setPower(1)),
+////                                        new SequentialAction(
+////                                                new InstantAction(robot::highRung)
+////                                        )
+//                        ),
+////                                new InstantAction(()->robot.climbWinch.setPower(0)),
+////                                robot.outtakeSpecimen(true),
+////                                new InstantAction(() -> robot.lift.runToPosition(810)),
+//                        //new SleepCommand(0.1),
+////                                new InstantAction(() -> robot.intermediatePreset()),
+////                               // SPIKE RIGHT
+//                        new ParallelCommand(
+//                                spike1
+//                                //robot.retractedIntakePreset(true)
+//
+//                        )
 //                                new InstantAction(()->robot.extension.runToPosition(225)),
 //                                new SleepAction(0.4),
 //                                new InstantAction(() -> robot.arm.runToPreset(Levels.INTAKE_INTERMEDIATE)),
@@ -196,9 +202,9 @@ public class AutonTest extends LinearOpMode {
 //                                new SleepAction(0.1),
 //                                new InstantAction(() -> robot.intermediatePreset())
 
-                    ),
-                        new LoopCommand(drive::update, this::isStopRequested)
-                )
+                ),
+                new LoopCommand(drive::update, this::isStopRequested)
+            )
         );
         // robot.cv.kill();
     }

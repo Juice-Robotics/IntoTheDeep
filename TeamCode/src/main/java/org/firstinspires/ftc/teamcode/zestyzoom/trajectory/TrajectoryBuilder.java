@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.zestyzoom.trajectory;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
@@ -15,26 +16,28 @@ public class TrajectoryBuilder {
     Drive drive;
     Pose2D endPose;
     ArrayList<Command> trajectory = new ArrayList<>();
-    public TrajectoryBuilder(Drive drive, Pose2D startingPos) {
+    Telemetry telemetry;
+    public TrajectoryBuilder(Drive drive, Pose2D startingPos, Telemetry telemetry) {
         startingPosition = startingPos;
         endPose = startingPos;
         this.drive = drive;
+        this.telemetry = telemetry;
     }
 
     public TrajectoryBuilder addPoint(Pose2D target) {
-        trajectory.add(new PointTrajectory(drive, target));
+        trajectory.add(new PointTrajectory(drive, target, telemetry));
         endPose = target;
         return this;
     }
 
     public TrajectoryBuilder turn(double angle) {
-        trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS) + angle)));
+        trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS) + angle), telemetry));
         endPose = new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS) + angle);
         return this;
     }
 
     public TrajectoryBuilder turnTo(double heading) {
-        trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, heading)));
+        trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, heading), telemetry));
         endPose = new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, heading);
         return this;
     }
