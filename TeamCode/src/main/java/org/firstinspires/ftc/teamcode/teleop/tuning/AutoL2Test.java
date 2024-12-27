@@ -15,11 +15,10 @@ public class AutoL2Test extends LinearOpMode {
     ContinuousServo climb1;
     ContinuousServo climb2;
 
-    double setupTargetPosition1;
-    double setupTargetPosition2;
-
-    double pullTargetPosition1;
-    double pullTargetPosition2;
+    double setupTargetPosition1 = 4;
+    double setupTargetPosition2 = 54;
+    double pullTargetPosition1 = 166;
+    double pullTargetPosition2 = 235;
 
     private static final double kP = 0.01;
     private static final double kF = 0.1;
