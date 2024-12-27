@@ -22,8 +22,8 @@ public class Drive {
     private PIDController controllerHeading;
 
     public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.033, iS = -0.12, dS = -0.002, fS = 0;;
-    public static double pH = -0.73, iH = 0, dH = 0.000;
+    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;;
+    public static double pH = -0.7, iH = 0, dH = 0.000;;
 
     public static double targetF = 0;
     public static double targetS = 0;
@@ -58,7 +58,7 @@ public class Drive {
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
+        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.13217677165));
         pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
@@ -87,11 +87,6 @@ public class Drive {
         telemetry.addData("X ", pose.getY(DistanceUnit.INCH));
         telemetry.addData("Y ", pose.getX(DistanceUnit.INCH));
         telemetry.addData("H ", normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading));
-//        telemetry.addData("forward ", forward);
-//        telemetry.addData("strafe ", strafe);
-//        telemetry.addData("heading ", heading);
-//        telemetry.addData("rforward ", r.y);
-//        telemetry.addData("rstrafe ", r.x);
 
         telemetry.addData("forwardTarget ", targetF);
         telemetry.addData("strafeTarget ", targetS);
@@ -126,9 +121,11 @@ public class Drive {
         }
         return heading;
     }
+
     private Vector2d rotateVector(Vector2d vector, double angle){
         return new Vector2d(Math.cos(angle)*vector.x - Math.sin(angle)*vector.y, Math.sin(angle)*vector.x + Math.cos(angle)*vector.y);
     }
+
     private void setDrivePower(double x, double y, double rx) {
         double powerFrontLeft = y + x + rx;
         double powerFrontRight = y - x - rx;
