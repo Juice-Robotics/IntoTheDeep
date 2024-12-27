@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.zestyzoom.trajectory.commands;
+package org.firstinspires.ftc.teamcode.drive.trajectory.commands;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commands.util.Command;
-import org.firstinspires.ftc.teamcode.zestyzoom.Drive;
+import org.firstinspires.ftc.teamcode.drive.Drive;
 
 public class PointTrajectory implements Command {
     Drive drive;

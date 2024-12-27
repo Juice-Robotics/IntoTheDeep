@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.zestyzoom.trajectory;
+package org.firstinspires.ftc.teamcode.drive.trajectory;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -6,8 +6,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commands.primitives.SleepCommand;
 import org.firstinspires.ftc.teamcode.commands.util.Command;
-import org.firstinspires.ftc.teamcode.zestyzoom.Drive;
-import org.firstinspires.ftc.teamcode.zestyzoom.trajectory.commands.PointTrajectory;
+import org.firstinspires.ftc.teamcode.drive.Drive;
+import org.firstinspires.ftc.teamcode.drive.trajectory.commands.PointTrajectory;
 
 import java.util.ArrayList;
 
