@@ -38,8 +38,8 @@ import org.firstinspires.ftc.teamcode.zestyzoom.trajectory.TrajectoryCommand;
 @Autonomous(name = "a", group = "Autonomous")
 public class AutonTest extends LinearOpMode {
     public void runOpMode() {
-        //Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, Math.PI);
-        Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, 0);
+        Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, Math.PI);
+        //Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, 0);
         Drive drive = new Drive(hardwareMap, beginPose, telemetry);
 
         TrajectoryCommand preloadDrive = drive.trajectoryBuilder(drive.pose)

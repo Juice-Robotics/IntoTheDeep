@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleop.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
@@ -16,6 +19,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.roadrunner.Drawing;
 import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 
 @Config
@@ -27,9 +31,9 @@ public class PIDtoPointR extends OpMode {
     private PIDController controllerHeading;
     public VoltageSensor voltageSensor;
 
-    public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.033, iS = -0.12, dS = -0.002, fS = 0;;
-    public static double pH = -0.73, iH = 0, dH = 0.000;
+    public static double pF = 0.055, iF = 0, dF = 0.015, fF = 0;
+    public static double pS = -0.05, iS = -0.12, dS = -0.0025, fS = 0;;
+    public static double pH = -0.55, iH = 0, dH = -0.017;
 
     public static double targetF = 0;
     public static double targetS = 0;
@@ -61,14 +65,15 @@ public class PIDtoPointR extends OpMode {
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         // RR localizer note: don't love this conversion (change driver?)
-        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
-        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
-        pinpoint.resetPosAndIMU();
-//        pinpoint.setOffsets(DistanceUnit.MM.fromInches(-3), DistanceUnit.MM.fromInches(0.5));
-//        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-//        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
+//        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
+//        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+//        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
 //        pinpoint.resetPosAndIMU();
+        //OLD ROBOT
+        pinpoint.setOffsets(DistanceUnit.MM.fromInches(-3), DistanceUnit.MM.fromInches(0.5));
+        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
+        pinpoint.resetPosAndIMU();
 
     }
     @Override
@@ -88,10 +93,17 @@ public class PIDtoPointR extends OpMode {
 //        Vector2d r = rotateVector(new Vector2d(strafe, forward), -heading);
 //        robot.setDrivePower(r.x, r.y, heading);
         telemetry.addData("X ", pinpoint.getPosition().getY(DistanceUnit.INCH));
-        telemetry.addData("Y ", pinpoint.getPosition().getX(DistanceUnit.INCH));
+        telemetry.addData("Y ", pinpoint.getPosition().getX(DistanceUnit.INCH) - targetF);
         telemetry.addData("H ", pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
-        Vector2d rotatedTarget = rotateVector(new Vector2d(targetS, targetF), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
-        Vector2d rotatedPosition = rotateVector(new Vector2d(pinpoint.getPosition().getY(DistanceUnit.INCH), pinpoint.getPosition().getX(DistanceUnit.INCH)), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
+        Vector2d rotatedTarget = rotateVector(new Vector2d(targetS, targetF), pinpoint.getHeading());
+        Vector2d rotatedPosition = rotateVector(new Vector2d(pinpoint.getPosition().getY(DistanceUnit.INCH), pinpoint.getPosition().getX(DistanceUnit.INCH)), pinpoint.getHeading());
+        TelemetryPacket packet = new TelemetryPacket();
+        Canvas c = packet.fieldOverlay();
+        c.setStroke("#edd100");
+        Drawing.drawRobot(c, new Pose2d(rotatedTarget.x, rotatedTarget.y, 0));
+        c.setStroke("#bdd100");
+        Drawing.drawRobot(c, new Pose2d(rotatedPosition.x, rotatedPosition.y, 0));
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
         double forward = controllerForward.calculate(rotatedPosition.y, rotatedTarget.y);
         double strafe = controllerStrafe.calculate(rotatedPosition.x, rotatedTarget.x);
         double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
@@ -100,6 +112,8 @@ public class PIDtoPointR extends OpMode {
         double loopTime = newTime-oldTime;
         double frequency = 1/loopTime;
         oldTime = newTime;
+        telemetry.addData("forwarda ",forward);
+        telemetry.addData("strafea ", strafe);
         telemetry.addData("forward ",rotatedPosition.y);
         telemetry.addData("strafe ", rotatedPosition.x);
         telemetry.addData("heading ", heading);
@@ -147,6 +161,10 @@ public class PIDtoPointR extends OpMode {
         rightFront.setPower((float) powerFrontRight);
         leftBack.setPower(-(float) powerBackLeft);
         rightBack.setPower(-(float) powerBackRight);
+        telemetry.addData("lf", powerFrontLeft);
+        telemetry.addData("rf", powerFrontRight);
+        telemetry.addData("lb", -1*powerBackLeft);
+        telemetry.addData("rb",-1* powerBackRight);
     }
 }
 
