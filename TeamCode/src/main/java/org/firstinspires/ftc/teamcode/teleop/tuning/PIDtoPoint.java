@@ -32,7 +32,6 @@ public class PIDtoPoint extends OpMode {
     public static double targetF = 0;
     public static double targetS = 0;
     public static double targetH = 0;
-    //private final double angleSlides = 60;
     private double lastHeading;
 
     private DcMotorEx leftFront;
@@ -57,34 +56,20 @@ public class PIDtoPoint extends OpMode {
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         // RR localizer note: don't love this conversion (change driver?)
-//        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.125));
-//        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-//        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
-//        pinpoint.resetPosAndIMU();
-        pinpoint.setOffsets(DistanceUnit.MM.fromInches(-3), DistanceUnit.MM.fromInches(0.5));
-        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
+        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.13217677165));
+        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
-
     }
+
     @Override
     public void loop(){
         controllerForward.setPIDF(pF, iF , dF, fF);
         controllerStrafe.setPIDF(pS, iS , dS, fS);
         controllerHeading.setPID(pH, iH , dH);
-        //robot.updatePinpoint();
+
         pinpoint.update();
-//        telemetry.addData("X ", robot.pinpoint.getPosition().getY(DistanceUnit.INCH));
-//        telemetry.addData("Y ", robot.pinpoint.getPosition().getX(DistanceUnit.INCH));
-//        telemetry.addData("H ", robot.pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
-//        double forward = controllerForward.calculate( robot.pinpoint.getPosition().getX(DistanceUnit.INCH), targetF);
-//        double strafe = controllerStrafe.calculate( robot.pinpoint.getPosition().getY(DistanceUnit.INCH), targetS);
-//        double heading = controllerHeading.calculate(normalizeH(robot.pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
-//        Vector2d r = rotateVector(new Vector2d(strafe, forward), -heading);
-//        robot.setDrivePower(r.x, r.y, heading);
-        telemetry.addData("X ", pinpoint.getPosition().getY(DistanceUnit.INCH));
-        telemetry.addData("Y ", pinpoint.getPosition().getX(DistanceUnit.INCH));
-        telemetry.addData("H ", pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
+
         double forward = controllerForward.calculate(pinpoint.getPosition().getX(DistanceUnit.INCH), targetF);
         double strafe = controllerStrafe.calculate(pinpoint.getPosition().getY(DistanceUnit.INCH), targetS);
         double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
@@ -94,6 +79,11 @@ public class PIDtoPoint extends OpMode {
         double loopTime = newTime-oldTime;
         double frequency = 1/loopTime;
         oldTime = newTime;
+
+
+        telemetry.addData("X ", pinpoint.getPosition().getY(DistanceUnit.INCH));
+        telemetry.addData("Y ", pinpoint.getPosition().getX(DistanceUnit.INCH));
+        telemetry.addData("H ", pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         telemetry.addData("forward ", forward);
         telemetry.addData("strafe ", strafe);
         telemetry.addData("heading ", heading);
@@ -107,15 +97,18 @@ public class PIDtoPoint extends OpMode {
         telemetry.update();
         lastHeading = pinpoint.getHeading();
     }
+
     public double normalizeH(double heading, double lastHeading){
         if ((heading < 0) && (lastHeading > 1)){
             return heading + 2*Math.PI;
         }
         return heading;
     }
+
     public Vector2d rotateVector(Vector2d vector, double angle){
         return new Vector2d(Math.cos(angle)*vector.x - Math.sin(angle)*vector.y, Math.sin(angle)*vector.x + Math.cos(angle)*vector.y);
     }
+
     public void setDrivePower(double x, double y, double rx) {
         double powerFrontLeft = y + x + rx;
         double powerFrontRight = y - x - rx;

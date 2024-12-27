@@ -58,9 +58,9 @@ public class Drive {
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pinpoint.setOffsets(DistanceUnit.MM.fromInches(-3), DistanceUnit.MM.fromInches(0.5));
-        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
+        pinpoint.setOffsets(DistanceUnit.MM.fromInches(0), DistanceUnit.MM.fromInches(5.13217677165));
+        pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.FORWARD, GoBildaPinpoint.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
         try {
             Thread.sleep(1000);
@@ -87,11 +87,6 @@ public class Drive {
         telemetry.addData("X ", pose.getY(DistanceUnit.INCH));
         telemetry.addData("Y ", pose.getX(DistanceUnit.INCH));
         telemetry.addData("H ", normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading));
-//        telemetry.addData("forward ", forward);
-//        telemetry.addData("strafe ", strafe);
-//        telemetry.addData("heading ", heading);
-//        telemetry.addData("rforward ", r.y);
-//        telemetry.addData("rstrafe ", r.x);
 
         telemetry.addData("forwardTarget ", targetF);
         telemetry.addData("strafeTarget ", targetS);
@@ -126,9 +121,11 @@ public class Drive {
         }
         return heading;
     }
+
     private Vector2d rotateVector(Vector2d vector, double angle){
         return new Vector2d(Math.cos(angle)*vector.x - Math.sin(angle)*vector.y, Math.sin(angle)*vector.x + Math.cos(angle)*vector.y);
     }
+
     private void setDrivePower(double x, double y, double rx) {
         double powerFrontLeft = y + x + rx;
         double powerFrontRight = y - x - rx;
