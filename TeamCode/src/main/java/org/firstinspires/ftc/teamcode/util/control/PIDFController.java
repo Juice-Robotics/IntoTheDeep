@@ -71,11 +71,7 @@ public class PIDFController
 
         errorSum_ +=  (error * period);
 
-        if (Math.abs(period) > 1E-6) {
-            derError = (error - lastError_) / period;
-        } else {
-            derError = 0;
-        }
+        derError = (error - lastError_) / period;
 
         pTotal = kp_ * error;
         iTotal = ki_ * errorSum_;
@@ -83,7 +79,7 @@ public class PIDFController
         fTotal = kf_ * Math.signum(error);
 
         double output = pTotal + iTotal + dTotal + fTotal;
-
+        double pdOutput = pTotal + dTotal + fTotal;
         RobotLog.i("pTotal is " + pTotal);
         RobotLog.i("iTotal is " + iTotal);
         RobotLog.i("dTotal is " + dTotal);
@@ -92,7 +88,12 @@ public class PIDFController
 
         lastError_ = error;
         lastTime_ = time;
-        return (float) output;
+        if (pTotal + dTotal > 0.6) {
+            return (float) pdOutput;
+        }
+        else {
+            return (float) output;
+        }
     }
 
     public static double norm(double angle) {
