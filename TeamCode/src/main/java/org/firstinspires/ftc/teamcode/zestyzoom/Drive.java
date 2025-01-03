@@ -28,8 +28,8 @@ public class Drive {
     public static double targetF = 0;
     public static double targetS = 0;
     public static double targetH = 0;
-    public static double e = 2;
-    public static double eh = 3;
+    public static double e = 5;
+    public static double eh = 8;
 
     public Pose2D pose;
 
