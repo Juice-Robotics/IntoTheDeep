@@ -39,12 +39,12 @@ import org.firstinspires.ftc.teamcode.zestyzoom.trajectory.TrajectoryCommand;
 public class AutonTest extends LinearOpMode {
     public void runOpMode() {
         //Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, Math.PI);
-        Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, 0);
+        Pose2D beginPose = new Pose2D(DistanceUnit.INCH, 12.0, -60.0, AngleUnit.RADIANS, Math.toRadians(275));
         Drive drive = new Drive(hardwareMap, beginPose, telemetry);
 
         TrajectoryCommand preloadDrive = drive.trajectoryBuilder(drive.pose)
                 //.addPoint(new Pose2D(DistanceUnit.INCH, 0, -29, AngleUnit.RADIANS, Math.PI))
-                .addPoint(new Pose2D(DistanceUnit.INCH, 0, -40, AngleUnit.RADIANS, 0))
+                .addPoint(new Pose2D(DistanceUnit.INCH, 0, -28, AngleUnit.RADIANS, Math.toRadians(275)))
                 .waitSeconds(1)
                 .build();
         TrajectoryCommand spike1 = drive.trajectoryBuilder(preloadDrive.endPose())
@@ -102,18 +102,18 @@ public class AutonTest extends LinearOpMode {
             new ParallelCommand(
                 new SequentialCommand(
                     // PRELOAD DEPOSIT
-                    preloadDrive,
-                    spike1,
-                    observation1,
-                    spike2,
-                    observation2,
-                    back,
-                    intake1,
-                    deposit,
-                    intake2,
-                    deposit2,
-                    intake3,
-                    deposit3
+                    preloadDrive
+//                    spike1,
+//                    observation1,
+//                    spike2,
+//                    observation2,
+//                    back,
+//                    intake1,
+//                    deposit,
+//                    intake2,
+//                    deposit2,
+//                    intake3,
+//                    deposit3
 //                        new ParallelCommand(
 //                                preloadDrive
 ////                                        new InstantCommand(()->robot.climbWinch.setPower(1)),

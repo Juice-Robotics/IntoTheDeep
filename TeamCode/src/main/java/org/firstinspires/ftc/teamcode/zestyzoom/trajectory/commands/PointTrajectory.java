@@ -21,8 +21,8 @@ public class PointTrajectory implements Command {
 
     @Override
     public boolean run() {
-        telemetry.addData("End x " , endTarget.getX(DistanceUnit.INCH));
-        telemetry.addData("Cur x " , drive.pose.getX(DistanceUnit.INCH));
+//        telemetry.addData("End x " , endTarget.getX(DistanceUnit.INCH));
+//        telemetry.addData("Cur x " , drive.pose.getX(DistanceUnit.INCH));
         telemetry.addData("Done" ,drive.isCloseTo(drive.pose, endTarget) );
         if (!started) {
             drive.setTarget(endTarget);
