@@ -26,9 +26,9 @@ public class PIDtoPoint extends OpMode {
     private PIDFController controllerStrafe;
     private PIDFController controllerHeading;
 
-    public static double pF = 0.09, iF = 0, dF = 18, fF = 0.03;
+    public static double pF = 0.09, iF = 0, dF = 20, fF = 0.03;
     public static double pS = -0.06, iS = 0, dS = -5, fS = 0.03;
-    public static double pH = -0.6, iH = 0, dH = 10;
+    public static double pH = -0.6, iH = 0, dH = 20, fH = 0.03;
 
     public static double targetF = 0;
     public static double targetS = 0;
@@ -71,7 +71,7 @@ public class PIDtoPoint extends OpMode {
     public void loop(){
         controllerForward.setPIDF(pF, iF , dF, fF);
         controllerStrafe.setPIDF(pS, iS , dS, fS);
-        controllerHeading.setPIDF(pH, iH , dH, 0);
+        controllerHeading.setPIDF(pH, iH , dH, fH);
         //robot.updatePinpoint();
         pinpoint.update();
 //        telemetry.addData("X ", robot.pinpoint.getPosition().getY(DistanceUnit.INCH));
