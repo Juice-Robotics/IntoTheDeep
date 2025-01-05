@@ -72,6 +72,7 @@ public class AutonTest extends LinearOpMode {
                 .waitSeconds(1)
                 .build();
         TrajectoryCommand deposit = drive.trajectoryBuilder(intake1.endPose())
+                .addPoint(new Pose2D(DistanceUnit.INCH, 7, -35, AngleUnit.RADIANS, Math.toRadians(360-90)))
                 .addPoint(new Pose2D(DistanceUnit.INCH, 5, -27, AngleUnit.RADIANS, Math.toRadians(360-90)))
                 .waitSeconds(1)
                 .build();
@@ -103,16 +104,27 @@ public class AutonTest extends LinearOpMode {
                 new SequentialCommand(
                     // PRELOAD DEPOSIT
                     preloadDrive,
+                    new SleepCommand(0.5),
                     spike1,
+                    new SleepCommand(0.5),
                     observation1,
+                        new SleepCommand(0.5),
                     spike2,
+                        new SleepCommand(0.5),
                     observation2,
+                        new SleepCommand(0.5),
                     back,
+                        new SleepCommand(0.5),
                     intake1,
+                        new SleepCommand(0.5),
                     deposit,
+                        new SleepCommand(0.5),
                     intake2,
+                        new SleepCommand(0.5),
                     deposit2,
+                        new SleepCommand(0.5),
                     intake3,
+                        new SleepCommand(0.5),
                     deposit3
 //                        new ParallelCommand(
 //                                preloadDrive

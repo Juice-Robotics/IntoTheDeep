@@ -28,7 +28,7 @@ public class PIDtoPoint extends OpMode {
 
     public static double pF = 0.09, iF = 0, dF = 20, fF = 0.03;
     public static double pS = -0.06, iS = 0, dS = -5, fS = 0.03;
-    public static double pH = -0.6, iH = 0, dH = 20, fH = 0.03;
+    public static double pH = -0.65, iH = -0.0008, dH = -35, fH = 0.03;
 
     public static double targetF = 0;
     public static double targetS = 0;

@@ -21,15 +21,15 @@ public class Drive {
     private PIDFController controllerStrafe;
     private PIDFController controllerHeading;
 
-    public static double pF = 0.09, iF = 0, dF = 18, fF = 0.03;
+    public static double pF = 0.09, iF = 0, dF = 20, fF = 0.03;
     public static double pS = -0.06, iS = 0, dS = -5, fS = 0.03;
-    public static double pH = -0.6, iH = 0, dH = 10;
+    public static double pH = -0.5, iH = -0.0008, dH = -35, fH = 0.03;
 
     public static double targetF = 0;
     public static double targetS = 0;
     public static double targetH = 0;
-    public static double e = 5;
-    public static double eh = 8;
+    public static double e = 2;
+    public static double eh = 2;
 
     public Pose2D pose;
 
@@ -45,7 +45,7 @@ public class Drive {
     public Drive(HardwareMap hardwareMap, Pose2D startingPose, Telemetry telemetry) {
         controllerForward = new PIDFController(pF, iF , dF, fF, false);
         controllerStrafe = new PIDFController(pS, iS , dS, fS, false);
-        controllerHeading = new PIDFController(pH, iH , dH, 0, false);
+        controllerHeading = new PIDFController(pH, iH , dH, fH, false);
 
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
