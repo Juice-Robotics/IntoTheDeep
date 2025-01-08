@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.zestyzoom.trajectory;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.commands.util.Command;
 
@@ -7,14 +10,17 @@ public class TrajectoryCommand implements Command {
     Command[] queue;
     Pose2D startPose;
     Pose2D endPose;
-    public TrajectoryCommand(Pose2D startingPos, Pose2D endPos, Command... cmds) {
+    TelemetryPacket packet;
+    public TrajectoryCommand(Pose2D startingPos, Pose2D endPos, TelemetryPacket packet, Command... cmds) {
         queue = cmds;
         startPose = startingPos;
         endPose = endPos;
+        this.packet = packet;
     }
 
     @Override
     public boolean run() {
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
         if (queue.length == 0) {
             return false;
         }

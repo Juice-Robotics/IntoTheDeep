@@ -439,24 +439,31 @@ public class Robot {
 
     private ElapsedTime colorTimeout = new ElapsedTime();
     boolean timerStarted = false;
+    int averageColorResult = 0;
     public boolean autoStopIntakeUpdate(SampleColors... colors) {
         int r = claw.smartStopDetect(colors);
         if (r == 0 && colorTimeout.time() > 0) {
             timerStarted = false;
+            averageColorResult = 0;
             return true;
-        } else if (r == 1 && timerStarted && colorTimeout.time() > 0.000) {
-            while (colorTimeout.time() < 0.1){
-                if (claw.smartStopDetect() != 1){
-                    return true;
-                }
-            }
-            stopIntake();
-            return false;
-        } else if (r == -1 && timerStarted && colorTimeout.time() > 0.000) {
-                claw.ejectOps();
-                return true;
+        } else if (timerStarted && colorTimeout.time() < 0.100) {
+            averageColorResult += r;
+            averageColorResult /= 2;
+            return true;
+        } else if (timerStarted && colorTimeout.time() >= 0.1) {
+              timerStarted = false;
+              if (averageColorResult > 0.8) {
+                  stopIntake();
+                  return false;
+              } else if (averageColorResult < -0.2) {
+                  claw.ejectOps();
+                  return true;
+              } else {
+                  return true;
+              }
         } else if ((r == 1 || r == -1) && !timerStarted) {
             timerStarted = true;
+            averageColorResult = r;
             colorTimeout.reset();
         }
 
