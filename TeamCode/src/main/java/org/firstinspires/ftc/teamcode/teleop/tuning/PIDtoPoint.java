@@ -23,12 +23,11 @@ import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 public class PIDtoPoint extends OpMode {
     private PIDFController controllerForward;
     private PIDFController controllerStrafe;
-    private PIDController controllerHeading;
+    private PIDFController controllerHeading;
 
     public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;;
-    public static double pH = -0.7, iH = 0, dH = 0.000;;;
-
+    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;
+    public static double pH = -0.7, iH = 0, dH = 0.000, fH = 0;
     public static double targetF = 0;
     public static double targetS = 0;
     public static double targetH = 0;
@@ -47,7 +46,7 @@ public class PIDtoPoint extends OpMode {
     public void init() {
         controllerForward = new PIDFController(pF, iF , dF, fF);
         controllerStrafe = new PIDFController(pS, iS , dS, fS);
-        controllerHeading = new PIDController(pH, iH , dH);
+        controllerHeading = new PIDFController(pH, iH , dH, fH);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
@@ -71,7 +70,8 @@ public class PIDtoPoint extends OpMode {
     public void loop(){
         controllerForward.setPIDF(pF, iF , dF, fF);
         controllerStrafe.setPIDF(pS, iS , dS, fS);
-        controllerHeading.setPID(pH, iH , dH);
+        controllerHeading.setPIDF(pH, iH , dH, fH);
+
         //robot.updatePinpoint();
         pinpoint.update();
 //        telemetry.addData("X ", robot.pinpoint.getPosition().getY(DistanceUnit.INCH));
