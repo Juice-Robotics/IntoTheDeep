@@ -18,20 +18,21 @@ import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 import org.firstinspires.ftc.teamcode.zestyzoom.trajectory.TrajectoryBuilder;
 
 public class Drive {
-    private PIDFController controllerForward;
-    private PIDFController controllerStrafe;
+    private PIDFController controllerY;
+    private PIDFController controllerX;
     private PIDController controllerHeading;
 
-    public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
-    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;
-    public static double pH = -0.7, iH = 0, dH = 0.000, fH = 0;
+    public static double pY = 0.08, iY = 0, dY = 0.01;
+    public static double pX = -0.08, iX = -0.1, dX = -0.01;
+    public static double pH = -0.6, iH = 0, dH = 0.000, fH = -0.003;
+    public static double fMult = 0.003;
 
-    public static double targetF = 0;
-    public static double targetS = 0;
+    public static double targetY = 0;
+    public static double targetX = 0;
     public static double targetH = 0;
-    public static double ef = 1;
-    public static double es = 2;
-    public static double eh = 3;
+    public static double ef = 0.5;
+    public static double es = 0.5;
+    public static double eh = 2;
 
     public Pose2D pose;
 
@@ -43,10 +44,10 @@ public class Drive {
     private DcMotorEx rightBack;
     private GoBildaPinpoint pinpoint;
     public Telemetry telemetry;
-
+    public Vector2d r;
     public Drive(HardwareMap hardwareMap, Pose2D startingPose, Telemetry telemetry) {
-        controllerForward = new PIDFController(pF, iF , dF, fF);
-        controllerStrafe = new PIDFController(pS, iS , dS, fS);
+        controllerY = new PIDFController(pY, iY, dY, 0);
+        controllerX = new PIDFController(pX, iX, dX, 0);
         controllerHeading = new PIDController(pH, iH , dH);
 
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -70,34 +71,36 @@ public class Drive {
             throw new RuntimeException(e);
         }
         pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, startingPose.getY(DistanceUnit.INCH), startingPose.getX(DistanceUnit.INCH), AngleUnit.RADIANS, startingPose.getHeading(AngleUnit.RADIANS)));
-        targetS = startingPose.getX(DistanceUnit.INCH);
-        targetF = startingPose.getY(DistanceUnit.INCH);
+        targetX = startingPose.getX(DistanceUnit.INCH);
+        targetY = startingPose.getY(DistanceUnit.INCH);
         targetH = startingPose.getHeading(AngleUnit.RADIANS);
         pose = startingPose;
-
     }
 
     public void update() {
         pinpoint.update();
         pose = new Pose2D(DistanceUnit.INCH, pinpoint.getPosition().getY(DistanceUnit.INCH), pinpoint.getPosition().getX(DistanceUnit.INCH), AngleUnit.RADIANS, normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading));
-        double forward = controllerForward.calculate(pose.getY(DistanceUnit.INCH), targetF);
-        double strafe = controllerStrafe.calculate(pose.getX(DistanceUnit.INCH), targetS);
+        double forward = controllerY.calculate(pose.getY(DistanceUnit.INCH), targetY);
+        double strafe = controllerX.calculate(pose.getX(DistanceUnit.INCH), targetX);
         double heading = controllerHeading.calculate(normalizeH(pinpoint.getHeading(), lastHeading), targetH);
-        Vector2d r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
+        heading += fH*(heading/Math.abs(heading));
+        r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         setDrivePower(r.x, r.y, heading);
 
         telemetry.addData("X ", pose.getY(DistanceUnit.INCH));
         telemetry.addData("Y ", pose.getX(DistanceUnit.INCH));
-        telemetry.addData("H ", normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading));
+        telemetry.addData("H ", pose.getHeading(AngleUnit.RADIANS));
 
-        telemetry.addData("forwardTarget ", targetF);
-        telemetry.addData("strafeTarget ", targetS);
+        telemetry.addData("forwardTarget ", targetY);
+        telemetry.addData("strafeTarget ", targetX);
         telemetry.addData("headingTarget ", targetH);
-        telemetry.addData("FError ", pose.getY(DistanceUnit.INCH) - targetF);
-        telemetry.addData("SError ", pose.getX(DistanceUnit.INCH)-targetS);
+        telemetry.addData("FError ", pose.getY(DistanceUnit.INCH) - targetY);
+        telemetry.addData("SError ", pose.getX(DistanceUnit.INCH)- targetX);
         telemetry.addData("HError ", normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading)-targetH);
         telemetry.update();
         lastHeading = pinpoint.getHeading();
+        controllerY.setF(fMult*r.x * Math.sin(pose.getHeading(AngleUnit.RADIANS)));
+        controllerX.setF(fMult*r.x * Math.cos(pose.getHeading(AngleUnit.RADIANS)));
 
     }
 
@@ -106,13 +109,15 @@ public class Drive {
     }
 
     public void setTarget(Pose2D pose) {
-        targetF = pose.getY(DistanceUnit.INCH);
-        targetS = pose.getX(DistanceUnit.INCH);
+        targetY = pose.getY(DistanceUnit.INCH);
+        targetX = pose.getX(DistanceUnit.INCH);
         targetH = pose.getHeading(AngleUnit.RADIANS);
     }
 
     public boolean isCloseTo(Pose2D currentPose, Pose2D targetPose) {
-        return Math.abs(currentPose.getX(DistanceUnit.INCH) - targetPose.getX(DistanceUnit.INCH)) < es && Math.abs(currentPose.getY(DistanceUnit.INCH) - targetPose.getY(DistanceUnit.INCH)) < ef && Math.abs(currentPose.getHeading(AngleUnit.DEGREES) - targetPose.getHeading(AngleUnit.DEGREES)) < eh;
+        double hd = Math.abs(currentPose.getHeading(AngleUnit.DEGREES) - targetPose.getHeading(AngleUnit.DEGREES));
+
+        return Math.abs(currentPose.getX(DistanceUnit.INCH) - targetPose.getX(DistanceUnit.INCH)) < es && Math.abs(currentPose.getY(DistanceUnit.INCH) - targetPose.getY(DistanceUnit.INCH)) < ef &&  (hd< eh || hd-360 < eh);
     }
 
     private double normalizeH(double heading, double lastHeading){
