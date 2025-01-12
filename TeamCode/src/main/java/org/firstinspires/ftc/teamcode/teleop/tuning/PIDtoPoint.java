@@ -4,9 +4,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Vector2d;
-//import com.arcrobotics.ftclib.controller.PIDController;
-//import com.arcrobotics.ftclib.controller.PIDFController;
-import org.firstinspires.ftc.teamcode.util.control.PIDFController;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,11 +23,11 @@ import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 public class PIDtoPoint extends OpMode {
     private PIDFController controllerForward;
     private PIDFController controllerStrafe;
-    private PIDFController controllerHeading;
+    private PIDController controllerHeading;
 
-    public static double pF = 0.09, iF = 0, dF = 20, fF = 0.03;
-    public static double pS = -0.06, iS = 0, dS = -5, fS = 0.03;
-    public static double pH = -0.65, iH = -0.0008, dH = -35, fH = 0.03;
+    public static double pF = 0.08, iF = 0, dF = 0.01, fF = 0;
+    public static double pS = -0.06, iS = -0.1, dS = -0.002, fS = 0;;
+    public static double pH = -0.7, iH = 0, dH = 0.000;;;
 
     public static double targetF = 0;
     public static double targetS = 0;
@@ -42,12 +41,13 @@ public class PIDtoPoint extends OpMode {
     private DcMotorEx rightBack;
     private GoBildaPinpoint pinpoint;
     //public Robot robot;
+    double oldTime = 0;
 
     @Override
     public void init() {
-        controllerForward = new PIDFController(pF, iF , dF, fF, false);
-        controllerStrafe = new PIDFController(pS, iS , dS, fS, false);
-        controllerHeading = new PIDFController(pH, iH, dH, 0, false);
+        controllerForward = new PIDFController(pF, iF , dF, fF);
+        controllerStrafe = new PIDFController(pS, iS , dS, fS);
+        controllerHeading = new PIDController(pH, iH , dH);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
@@ -71,7 +71,7 @@ public class PIDtoPoint extends OpMode {
     public void loop(){
         controllerForward.setPIDF(pF, iF , dF, fF);
         controllerStrafe.setPIDF(pS, iS , dS, fS);
-        controllerHeading.setPIDF(pH, iH , dH, fH);
+        controllerHeading.setPID(pH, iH , dH);
         //robot.updatePinpoint();
         pinpoint.update();
 //        telemetry.addData("X ", robot.pinpoint.getPosition().getY(DistanceUnit.INCH));
@@ -85,11 +85,15 @@ public class PIDtoPoint extends OpMode {
         telemetry.addData("X ", pinpoint.getPosition().getY(DistanceUnit.INCH));
         telemetry.addData("Y ", pinpoint.getPosition().getX(DistanceUnit.INCH));
         telemetry.addData("H ", pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
-        double forward = controllerForward.update(pinpoint.getPosition().getX(DistanceUnit.INCH), targetF);
-        double strafe = controllerStrafe.update(pinpoint.getPosition().getY(DistanceUnit.INCH), targetS);
-        double heading = controllerHeading.update(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
+        double forward = controllerForward.calculate(pinpoint.getPosition().getX(DistanceUnit.INCH), targetF);
+        double strafe = controllerStrafe.calculate(pinpoint.getPosition().getY(DistanceUnit.INCH), targetS);
+        double heading = controllerHeading.calculate(normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading), targetH);
         Vector2d r = rotateVector(new Vector2d(strafe, forward), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
         setDrivePower(r.x, r.y, heading);
+        double newTime = getRuntime();
+        double loopTime = newTime-oldTime;
+        double frequency = 1/loopTime;
+        oldTime = newTime;
         telemetry.addData("forward ", forward);
         telemetry.addData("strafe ", strafe);
         telemetry.addData("heading ", heading);
@@ -99,6 +103,7 @@ public class PIDtoPoint extends OpMode {
         telemetry.addData("forwardTarget ", targetF);
         telemetry.addData("strafeTarget ", targetS);
         telemetry.addData("headingTarget ", targetH);
+        telemetry.addData("LOOPTIME: ", frequency);
         telemetry.update();
         lastHeading = pinpoint.getHeading();
     }
@@ -139,4 +144,3 @@ public class PIDtoPoint extends OpMode {
         rightBack.setPower(-(float) powerBackRight);
     }
 }
-
