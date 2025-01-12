@@ -45,15 +45,15 @@ public class AutonTest extends LinearOpMode {
         TrajectoryCommand preloadDrive = drive.trajectoryBuilder(drive.pose)
                 //.addPoint(new Pose2D(DistanceUnit.INCH, 0, -29, AngleUnit.RADIANS, Math.PI))
                 .addPoint(new Pose2D(DistanceUnit.INCH, 0, -40, AngleUnit.RADIANS, 0))
-                //.waitSeconds(1)
+                .waitSeconds(5)
                 .build();
         TrajectoryCommand spike1 = drive.trajectoryBuilder(preloadDrive.endPose())
                 .addPoint(new Pose2D(DistanceUnit.INCH,-38, -43, AngleUnit.RADIANS, Math.toRadians(-23)))
-                //.waitSeconds(1)
+                .waitSeconds(1)
                 .build();
         TrajectoryCommand observation1 = drive.trajectoryBuilder(spike1.endPose())
                 .addPoint(new Pose2D(DistanceUnit.INCH,-35, -44.5, AngleUnit.RADIANS, Math.toRadians(-145)))
-                //.waitSeconds(1)
+                .waitSeconds(1)
                 .build();
         TrajectoryCommand spike2 = drive.trajectoryBuilder(observation1.endPose())
                 .addPoint(new Pose2D(DistanceUnit.INCH,-45.2, -42, AngleUnit.RADIANS, Math.toRadians(-10)))
@@ -91,6 +91,8 @@ public class AutonTest extends LinearOpMode {
                 .addPoint(new Pose2D(DistanceUnit.INCH, -3, -29, AngleUnit.RADIANS, Math.PI))
                 .waitSeconds(1)
                 .build();
+
+        LoopCommand cmdLoop = new LoopCommand(drive::update, this::isStopRequested);
         telemetry.addData("Status","starting");
         telemetry.update();
 //        robot.initSubsystems();
@@ -103,28 +105,29 @@ public class AutonTest extends LinearOpMode {
                         new SequentialCommand(
                                 // PRELOAD DEPOSIT
                                 preloadDrive,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 spike1,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 observation1,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 spike2,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 observation2,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 back,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 intake1,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 deposit,
-                                new SleepCommand(1),
+//                                new SleepCommand(5),
                                 intake2,
-                                new SleepCommand(1),
+//                                new SleepCommand(1),
                                 deposit2,
-                                new SleepCommand(1),
+//                                new SleepCommand(1),
                                 intake3,
-                                new SleepCommand(1),
-                                deposit3
+//                                new SleepCommand(1),
+                                deposit3,
+                                new InstantCommand(cmdLoop::kill)
 //                        new ParallelCommand(
 //                                preloadDrive
 ////                                        new InstantCommand(()->robot.climbWinch.setPower(1)),
@@ -214,7 +217,7 @@ public class AutonTest extends LinearOpMode {
 //                                new InstantAction(() -> robot.intermediatePreset())
 
                         ),
-                        new LoopCommand(drive::update, this::isStopRequested)
+                        cmdLoop
                 )
         );
         // robot.cv.kill();
