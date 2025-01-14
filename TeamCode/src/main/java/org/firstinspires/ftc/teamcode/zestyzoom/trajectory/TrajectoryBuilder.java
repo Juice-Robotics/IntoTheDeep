@@ -45,6 +45,17 @@ public class TrajectoryBuilder {
         return this;
     }
 
+    /**
+     * Interim support for RR's Pose library (converts to our standard)
+     * @param target RR standard Pose 2D
+     * @return itself
+     */
+    public TrajectoryBuilder addPoint(Pose2d target) {
+        trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, target.position.x, target.position.y, AngleUnit.RADIANS, target.heading.toDouble()), telemetry));
+        endPose = new Pose2D(DistanceUnit.INCH, target.position.x, target.position.y, AngleUnit.RADIANS, target.heading.toDouble());
+        return this;
+    }
+
     public TrajectoryBuilder turn(double angle) {
         trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS) + angle), telemetry));
         endPose = new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS) + angle);
@@ -54,6 +65,18 @@ public class TrajectoryBuilder {
     public TrajectoryBuilder turnTo(double heading) {
         trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, heading), telemetry));
         endPose = new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, heading);
+        return this;
+    }
+
+    public TrajectoryBuilder lineToX(double distance) {
+        trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH) + distance, endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS)), telemetry));
+        endPose = new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH) + distance, endPose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS));
+        return this;
+    }
+
+    public TrajectoryBuilder lineToY(double distance) {
+        trajectory.add(new PointTrajectory(drive, new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH) + distance, AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS)), telemetry));
+        endPose = new Pose2D(DistanceUnit.INCH, endPose.getX(DistanceUnit.INCH), endPose.getY(DistanceUnit.INCH) + distance, AngleUnit.RADIANS, endPose.getHeading(AngleUnit.RADIANS));
         return this;
     }
 
