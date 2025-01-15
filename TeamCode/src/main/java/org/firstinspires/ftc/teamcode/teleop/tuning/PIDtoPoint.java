@@ -20,20 +20,23 @@ import org.firstinspires.ftc.teamcode.util.hardware.GoBildaPinpoint;
 @TeleOp
 //@Disabled
 public class PIDtoPoint extends OpMode {
-    private PIDFController controllerY;
-    private PIDFController controllerX;
+    private PIDController controllerY;
+    private PIDController controllerX;
     private PIDController controllerHeading;
 
     public static double pY = 0.08, iY = 0, dY = 0.01;
-    public static double pX = 0.08, iX = 0.1, dX = 0.01;
-    public static double pH = -0.6, iH = 0, dH = 0.000, fH = -0.003;
-    public static double fStrafe = 0.003;
+    public static double pX = -0.08, iX = -0.1, dX = -0.01;
+    public static double pH = -0.5, iH = -0.01, dH = 0.000, fH = 0.06;
+    public static double fStrafe = -0.003;
     public static double fForward = 0.001;
     public static double targetY = 0;
     public static double targetX = 0;
     public static double targetH = 0;
     //private final double angleSlides = 60;
-    private double lastHeading;
+    private double lastHeading = 0;
+
+    public double rx = 0;
+    public double ry = 0;
 
     private DcMotorEx leftFront;
     private DcMotorEx rightFront;
@@ -47,8 +50,8 @@ public class PIDtoPoint extends OpMode {
 
     @Override
     public void init() {
-        controllerY = new PIDFController(pY, iY, dY, 0);
-        controllerX = new PIDFController(pX, iX, dX, 0);
+        controllerY = new PIDController(pY, iY, dY);
+        controllerX = new PIDController(pX, iX, dX);
         controllerHeading = new PIDController(pH, iH , dH);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
@@ -67,42 +70,38 @@ public class PIDtoPoint extends OpMode {
         pinpoint.setEncoderResolution(GoBildaPinpoint.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         pinpoint.setEncoderDirections(GoBildaPinpoint.EncoderDirection.REVERSED, GoBildaPinpoint.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
-        pose = new Pose2D(DistanceUnit.INCH, 20,20,AngleUnit.RADIANS, -Math.PI/2);
-        pinpoint.setPosition(pose);
-        telemetry.addData("sp", pinpoint.getHeading());
-        telemetry.addData("spx", pinpoint.getPosX());
-        telemetry.addData("spy", pinpoint.getPosY());
-        telemetry.addData("sp1", pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
-        telemetry.addData("spx1", pinpoint.getPosition().getX(DistanceUnit.INCH));
-        telemetry.addData("spy1", pinpoint.getPosition().getY(DistanceUnit.INCH));
-        telemetry.update();
-
+        pose = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.RADIANS,0);
         r = new Vector2d(0,0);
     }
     @Override
     public void loop(){
-//        double fY = fStrafe *r.x * Math.sin(pose.getHeading(AngleUnit.RADIANS)) + fForward *r.y * Math.cos(pose.getHeading(AngleUnit.RADIANS));
-//        double fX = fStrafe *r.x * Math.cos(pose.getHeading(AngleUnit.RADIANS)) + fForward *r.y * Math.sin(pose.getHeading(AngleUnit.RADIANS));
-//        if ((r.x+r.y) != 0) {
-//            fY /= r.x + r.y;
-//            fX /= r.x + r.y;
-//        }
-//        controllerY.setPIDF(pY, iY, dY, fY);
-//        controllerX.setPIDF(pX, iX, dX, fX);c
-//        controllerHeading.setPID(pH, iH , dH);
-//        telemetry.addData("fY", fY);
-//        telemetry.addData("fX", fX);
+        double pow = Math.sqrt(Math.pow(r.x,2)+ Math.pow(r.y,2));
+        if ((pow) != 0) {
+            rx =  r.x/pow;
+            ry = r.y/pow;
+        }
+        double fY = fStrafe * rx * Math.sin(pose.getHeading(AngleUnit.RADIANS)) + fForward *ry * Math.cos(pose.getHeading(AngleUnit.RADIANS));
+        double fX = fStrafe * rx * Math.cos(pose.getHeading(AngleUnit.RADIANS)) + fForward *ry * Math.sin(pose.getHeading(AngleUnit.RADIANS));
+        controllerY.setPID(pY, iY, dY);
+        controllerX.setPID(pX, iX, dX);
+        controllerHeading.setPID(pH, iH , dH);
+        telemetry.addData("fY", fY);
+        telemetry.addData("fX", fX);
         //robot.updatePinpoint();
-        controllerY.setPIDF(pY, iY, dY, 0);
-        controllerX.setPIDF(pX, iX, dX, 0);
         pinpoint.update();
-        pose = new Pose2D(DistanceUnit.INCH, pinpoint.getPosition().getY(DistanceUnit.INCH), pinpoint.getPosition().getX(DistanceUnit.INCH), AngleUnit.RADIANS,  normalizeH(Math.PI/2+pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading));
+        pose = new Pose2D(DistanceUnit.INCH, pinpoint.getPosition().getY(DistanceUnit.INCH), pinpoint.getPosition().getX(DistanceUnit.INCH), AngleUnit.RADIANS,  normalizeH(pinpoint.getPosition().getHeading(AngleUnit.RADIANS), lastHeading));
         double yPow = controllerY.calculate(pose.getY(DistanceUnit.INCH), targetY);
         double xPow = controllerX.calculate(pose.getX(DistanceUnit.INCH), targetX);
-        double heading = controllerHeading.calculate(normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading), targetH);
-        heading += fH*(heading/Math.abs(heading));
+        double heading = controllerHeading.calculate(pose.getHeading(AngleUnit.RADIANS),  targetH);
+        if (normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading) - targetH> 0.01){
+            heading += fH;
+        }else if (normalizeH(pose.getHeading(AngleUnit.RADIANS), lastHeading) - targetH< -0.01){
+            heading -= fH;
+        }
+        yPow += fY;
+        xPow+=fX;
         r = rotateVector(new Vector2d(xPow, yPow), -pinpoint.getPosition().getHeading(AngleUnit.RADIANS));
-        setDrivePower(-r.x, r.y, heading);
+        setDrivePower(r.x, r.y, heading);
         double newTime = getRuntime();
         double loopTime = newTime-oldTime;
         double frequency = 1/loopTime;
@@ -110,7 +109,7 @@ public class PIDtoPoint extends OpMode {
         telemetry.addData("X ", pose.getX(DistanceUnit.INCH));
         telemetry.addData("Y ", pose.getY(DistanceUnit.INCH));
         telemetry.addData("H ", pose.getHeading(AngleUnit.RADIANS));
-        telemetry.addData("HP ", pinpoint.getHeading());
+        telemetry.addData("fH ", fH*(heading/Math.abs(heading)));
         telemetry.addData("targetY ", targetY);
         telemetry.addData("targetX ", targetX);
         telemetry.addData("targetH ", targetH);
@@ -121,9 +120,11 @@ public class PIDtoPoint extends OpMode {
         telemetry.update();
         lastHeading = pose.getHeading(AngleUnit.RADIANS);
     }
-    public double normalizeH(double heading, double lastHeading){
+    private double normalizeH(double heading, double lastHeading){
         if ((heading < 0) && (lastHeading > 1)){
             return heading + 2*Math.PI;
+        }else if ((heading > 0) && (lastHeading < -1)){
+            return heading - 2*Math.PI;
         }
         return heading;
     }
