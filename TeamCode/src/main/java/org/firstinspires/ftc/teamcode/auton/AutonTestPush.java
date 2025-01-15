@@ -42,42 +42,64 @@ public class AutonTestPush extends LinearOpMode {
         Pose2D beginPose = new Pose2D(DistanceUnit.INCH, -12.0, -60.0, AngleUnit.RADIANS, 0);
         Drive drive = new Drive(hardwareMap, beginPose, telemetry);
 
-        TrajectoryCommand auton = drive.trajectoryBuilder(drive.pose)
-                //drive to sub (preload)
-                .addPoint(new Pose2d(0, -29, Math.toRadians(-90)))
-                .waitSeconds(0.25)
+        double HPDeposit = -53;
+        double spikeBack = -12;
+        double waits = 0.2;
+        double intakeWait = 0.3;
 
-                //drive in front of left spike
-                .addPoint(new Pose2d(0, -42, Math.toRadians(-90)))
-                .addPoint(new Pose2d(36, -42, Math.toRadians(-90)))
+        TrajectoryCommand preload = drive.trajectoryBuilder(beginPose)
+                .lineToY(-30)
+                .build();
 
-                .addPoint(new Pose2d(36, -36, Math.toRadians(-90)))
-                .addPoint(new Pose2d(36, -12, Math.toRadians(-90)))
-                .addPoint(new Pose2d(40, -12, Math.toRadians(-90)))
-                .waitSeconds(0.1)
+        TrajectoryCommand allSpikes = drive.trajectoryBuilder(preload.endPose())
+                .addPoint(new Pose2d(18, -42, Math.toRadians(-90)))
+                .addPoint(new Pose2d(36, spikeBack, Math.toRadians(-90)))
 
-                //drive to observation zone part1
-                .addPoint(new Pose2d(40, -52, Math.toRadians(-90)))
-                .waitSeconds(0.1)
+                .addPoint(new Pose2d(46, spikeBack, Math.toRadians(-90)))
 
-                //drive in front of middle spike
-                .addPoint(new Pose2d(40, -12, Math.toRadians(-90)))
-                .addPoint(new Pose2d(52, -12, Math.toRadians(-90)))
-                .waitSeconds(0.1)
+                .lineToY(HPDeposit)
 
-                //drive to observation zone part 2
-                .addPoint(new Pose2d(52, -52, Math.toRadians(-90)))
-                .waitSeconds(0.1)
+                .addPoint(new Pose2d(46, spikeBack, Math.toRadians(-90)))
+                .addPoint(new Pose2d(55, spikeBack, Math.toRadians(-90)))
 
-                //drive in front of right spike
-                .addPoint(new Pose2d(52, -12, Math.toRadians(-90)))
-                .addPoint(new Pose2d(60, -12, Math.toRadians(-90)))
-                .waitSeconds(0.1)
+                .lineToY(HPDeposit)
 
-                //drive to observation zone part 3
-                .addPoint(new Pose2d(60, -52, Math.toRadians(-90)))
-                .waitSeconds(0.1)
+                .addPoint(new Pose2d(55, spikeBack, Math.toRadians(-90)))
+                .addPoint(new Pose2d(61, spikeBack, Math.toRadians(-90)))
 
+                .lineToY(HPDeposit)
+                .build();
+
+        TrajectoryCommand intakeSpec2 = drive.trajectoryBuilder(allSpikes.endPose())
+                .addPoint(new Pose2d(19, -48, Math.toRadians(-45)))
+                .build();
+
+        TrajectoryCommand depositSpec2 = drive.trajectoryBuilder(intakeSpec2.endPose())
+                .addPoint(new Pose2d(3, -30, Math.toRadians(-92)))
+                .build();
+
+        TrajectoryCommand intakeSpec3 = drive.trajectoryBuilder(depositSpec2.endPose())
+                .addPoint(new Pose2d(19, -48, Math.toRadians(-45)))
+                .build();
+
+        TrajectoryCommand depositSpec3 = drive.trajectoryBuilder(intakeSpec3.endPose())
+                .addPoint(new Pose2d(0, -30, Math.toRadians(-92)))
+                .build();
+
+        TrajectoryCommand intakeSpec4 = drive.trajectoryBuilder(depositSpec3.endPose())
+                .addPoint(new Pose2d(19, -48, Math.toRadians(-45)))
+                .build();
+
+        TrajectoryCommand depositSpec4 = drive.trajectoryBuilder(intakeSpec4.endPose())
+                .addPoint(new Pose2d(-3, -30, Math.toRadians(-92)))
+                .build();
+
+        TrajectoryCommand intakeSpec5 = drive.trajectoryBuilder(depositSpec4.endPose())
+                .addPoint(new Pose2d(19, -48, Math.toRadians(-45)))
+                .build();
+
+        TrajectoryCommand depositSpec5 = drive.trajectoryBuilder(intakeSpec5.endPose())
+                .addPoint(new Pose2d(-6, -30, Math.toRadians(-92)))
                 .build();
 
         LoopCommand cmdLoop = new LoopCommand(drive::update, this::isStopRequested);
@@ -92,7 +114,16 @@ public class AutonTestPush extends LinearOpMode {
                 new ParallelCommand(
                         new SequentialCommand(
                                 // PRELOAD DEPOSIT
-                                auton,
+                                preload,
+                                allSpikes,
+                                intakeSpec2,
+                                depositSpec2,
+                                intakeSpec3,
+                                depositSpec3,
+                                intakeSpec4,
+                                depositSpec4,
+                                intakeSpec5,
+                                depositSpec5,
                                 new InstantCommand(cmdLoop::kill)
 //                        new ParallelCommand(
 //                                preloadDrive
