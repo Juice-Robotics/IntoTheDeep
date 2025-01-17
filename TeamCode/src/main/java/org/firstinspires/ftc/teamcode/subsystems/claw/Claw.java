@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit;
 public class Claw {
     ContinuousServo servo1;
     ContinuousServo servo2;
-    BrushlandColorSensor colorSensor;
+    RevColorSensorV3 colorSensor;
     float power = 0;
 
     ElapsedTime sensorTimeout;
 
-    public Claw(ContinuousServo s1, ContinuousServo s2, BrushlandColorSensor sensor) {
+    public Claw(ContinuousServo s1, ContinuousServo s2, RevColorSensorV3 sensor) {
         servo1 = s1;
         servo2 = s2;
         colorSensor = sensor;
@@ -176,15 +176,21 @@ public class Claw {
 //            return null;
 //        }
 
-        if (colorSensor.onlyPin0()) {
+//        if (colorSensor.onlyPin0()) {
+//            return SampleColors.BLUE;
+//        } else if (colorSensor.onlyPin1()) {
+//            return SampleColors.RED;
+//        } else if (colorSensor.getBoth()) {
+//            return SampleColors.YELLOW;
+//        } else {
+//            return null;
+//        }
+        float red = colorSensor.getNormalizedColors().red;
+        float blue = colorSensor.getNormalizedColors().blue;
+        float green = colorSensor.getNormalizedColors().green;
+        if (colorSensor.getNormalizedColors().blue > 0) {
             return SampleColors.BLUE;
-        } else if (colorSensor.onlyPin1()) {
-            return SampleColors.RED;
-        } else if (colorSensor.getBoth()) {
-            return SampleColors.YELLOW;
-        } else {
-            return null;
-        }
+        } else if ()
 //        if (colorSensor.blue() > 0.5) {
 //            return SampleColors.BLUE;
 //        } else if (colorSensor.red() > 0.5) {

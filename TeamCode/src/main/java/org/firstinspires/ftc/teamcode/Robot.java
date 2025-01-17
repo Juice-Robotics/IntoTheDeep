@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -113,7 +114,8 @@ public class Robot {
 
         VoltageSensor voltageSensor = map.voltageSensor.iterator().next();
         //RevColorSensorV3 colorSensor = map.get(RevColorSensorV3.class, "colorSensor");
-        BrushlandColorSensor colorSensor = new BrushlandColorSensor(0, "color", map);
+//        BrushlandColorSensor colorSensor = new BrushlandColorSensor(0, "color", map);
+        RevColorSensorV3 colorSensor = map.get(RevColorSensorV3.class, "colorSensor");
 
         // INIT SUBSYSTEMS
 
