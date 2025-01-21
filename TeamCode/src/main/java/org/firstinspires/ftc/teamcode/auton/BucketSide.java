@@ -15,15 +15,15 @@ import org.firstinspires.ftc.teamcode.roadrunner.KalmanDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PoseKeeper;
 import org.firstinspires.ftc.teamcode.subsystems.vision.CVMaster;
 
-@Autonomous(name = "HPSideRed", group = "Autonomous")
+@Autonomous(name = "BucketSide", group = "Autonomous")
 public class BucketSide extends LinearOpMode {
     KalmanDrive drive;
     CVMaster cv;
     public void runOpMode() {
-        Pose2d beginPose = new Pose2d(12, -60, Math.toRadians(90));
-        cv = new CVMaster(hardwareMap.get(Limelight3A.class, "limelight"), hardwareMap.get(WebcamName.class, "Webcam 1"));
-        cv.start();
-        cv.setLLPipeline(CVMaster.LLPipeline.APRILTAGS);
+        Pose2d beginPose = new Pose2d(-30, -60, Math.toRadians(0));
+//        cv = new CVMaster(hardwareMap.get(Limelight3A.class, "limelight"), hardwareMap.get(WebcamName.class, "Webcam 1"));
+//        cv.start();
+//        cv.setLLPipeline(CVMaster.LLPipeline.APRILTAGS);
 
         drive = new KalmanDrive(hardwareMap, beginPose, cv.limelight);
 
@@ -78,9 +78,7 @@ public class BucketSide extends LinearOpMode {
                 .build();
         Action park = drive.actionBuilder(new Pose2d(-56, -56, Math.toRadians(45)))
                 //ascent zone park
-                .splineToLinearHeading(new Pose2d(-48, -10, Math.toRadians(0)), Math.toRadians(80))
-                .setTangent(Math.toRadians(80))
-                .splineToConstantHeading(new Vector2d(-25, -10), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-25, -10, Math.toRadians(0)), Math.toRadians(0))
 
                 .build();
         telemetry.addData("is","starting");

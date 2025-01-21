@@ -15,7 +15,7 @@ public class MeepMeepTestingBucketAuto {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-16, -60, Math.toRadians(-90)))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-30, -60, Math.toRadians(0)))
                 //preload
                 .setTangent(Math.toRadians(165))
                 .splineToLinearHeading(new Pose2d(-56, -56, Math.toRadians(45)), Math.toRadians(200))
@@ -52,9 +52,7 @@ public class MeepMeepTestingBucketAuto {
                 .waitSeconds(3)
 
                 //ascent zone park
-                .splineToLinearHeading(new Pose2d(-48, -10, Math.toRadians(0)), Math.toRadians(80))
-                .setTangent(Math.toRadians(80))
-                .splineToConstantHeading(new Vector2d(-25, -10), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-25, -10, Math.toRadians(0)), Math.toRadians(0))
 
                 .build());
 
